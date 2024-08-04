@@ -1,9 +1,16 @@
 {
   /* Base configuration. Do not edit this field. */
   "extends": "./temp/tsconfig.cocos.json",
-
   /* Add your custom configuration here. */
   "compilerOptions": {
-    "strict": false
+    "target": "es2019",
+    "lib": [
+      "es2019",
+      "dom"
+    ],
+    "module": "commonjs",
+    "strict": false,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true
   }
 }
