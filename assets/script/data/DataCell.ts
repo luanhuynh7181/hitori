@@ -1,8 +1,16 @@
 
 
 export class DataCell {
-    private value: number;
+    private _value: number;
     constructor(value: number) {
-        this.value = value;
+        this._value = value;
+    }
+
+    public set value(value: number) {
+        this._value = value;
+    }
+
+    public get value(): number {
+        return this._value;
     }
 }

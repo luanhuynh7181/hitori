@@ -1,10 +1,16 @@
-import { _decorator, Component, Node } from 'cc';
+import { _decorator, Component, instantiate, Node, Prefab, UITransform, Vec2 } from 'cc';
 import { DataCell } from '../data/DataCell';
+import { DataBoard } from '../data/DataBoard';
+import { UICell } from './UICell';
 const { ccclass, property } = _decorator;
 
 @ccclass('BoardGame')
 export class BoardGame extends Component {
-    private cells: DataCell[][] = [];
+    @property(Prefab) cellPrefab: Prefab = null;
+    @property(UITransform) cellContainer: UITransform = null;
+    @property(Node) nodeBoardGame: Node = null;
+    private dataBoard: DataBoard = new DataBoard();
+    private cells: UICell[][] = [];
     start() {
         const grid = [
             [1, 5, 1, 2, 3],
@@ -13,22 +19,32 @@ export class BoardGame extends Component {
             [3, 2, 1, 1, 3],
             [5, 5, 2, 3, 4]
         ];
-        this.createBoard(grid);
+        this.dataBoard.createBoard(grid);
+        this.createUICell();
     }
 
-    createBoard(boardJson: number[][]) {
-        for (const row of boardJson) {
-            const cellsRow: DataCell[] = [];
-            for (const cellValue of row) {
-                const cell = new DataCell(cellValue);
-                cellsRow.push(cell);
+    createUICell() {
+        const board: DataCell[][] = this.dataBoard.board;
+
+        const padding: number = 3;
+        const boardWidth = this.cellContainer.width;
+        const cellSize = boardWidth / board.length;
+        const posStart: Vec2 = new Vec2(-boardWidth / 2 + cellSize / 2, boardWidth / 2 - cellSize / 2);
+        for (let i = 0; i < board.length; i++) {
+            const row = board[i];
+            const uiRow: UICell[] = [];
+            for (let j = 0; j < row.length; j++) {
+                const cell = row[j];
+                const node: Node = instantiate(this.cellPrefab);
+                const uiCell: UICell = node.getComponent(UICell);
+                uiCell.dataCell = cell;
+                uiRow.push(uiCell);
+                this.nodeBoardGame.addChild(uiCell.node);
+                node.setPosition(posStart.x + i * cellSize, posStart.y - j * cellSize);
+                uiCell.updateSize(cellSize - padding);
             }
-            this.cells.push(cellsRow);
+            this.cells.push(uiRow);
         }
-    }
-
-    update(deltaTime: number) {
-
     }
 }
 
