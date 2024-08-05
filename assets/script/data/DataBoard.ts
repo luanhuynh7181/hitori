@@ -24,7 +24,19 @@ export class DataBoard {
     }
 
     public isvalidCoords(coords: Tcoords): boolean {
+        if (!this.board[coords.row][coords.column].isShaded) return true;
         return this.getCellAroundInvalid(coords).length === 0;
+    }
+
+    isValidAllCoords(): boolean {
+        for (let i = 0; i < this.board.length; i++) {
+            for (let j = 0; j < this.board[i].length; j++) {
+                if (!this.isvalidCoords({ row: i, column: j })) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
     public getCellAroundInvalid(coords: Tcoords): Tcoords[] {
@@ -65,5 +77,29 @@ export class DataBoard {
             }
         }
         return result;
+    }
+
+    isValidNumber(): boolean {
+        const map = new Map<string, boolean>();
+        for (let i = 0; i < this.board.length; i++) {
+            for (let j = 0; j < this.board[i].length; j++) {
+                if (this.board[i][j].isShaded) continue;
+                const value = this.board[i][j].value;
+                const hashCol = `row_${i}_${value}`;
+                if (map.has(hashCol)) return false;
+                const hashRow = `col_${j}_${value}`;
+                if (map.has(hashRow)) return false;
+                map.set(hashRow, true);
+                map.set(hashCol, true);
+            }
+        }
+        return true;
+    }
+
+    isWin(): boolean {
+        if (!this.isvalidArea()) return false;
+        if (!this.isValidAllCoords()) return false;
+        if (!this.isValidNumber()) return false;
+        return true;
     }
 }

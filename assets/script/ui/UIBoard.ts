@@ -23,11 +23,11 @@ export class BoardGame extends Component {
 
     start() {
         const grid = [
-            [1, 5, 1, 2, 3],
-            [1, 4, 5, 5, 1],
-            [3, 3, 5, 4, 1],
-            [3, 2, 1, 1, 3],
-            [5, 5, 2, 3, 4]
+            [4, 2, 5, 2, 4],
+            [4, 5, 2, 5, 1],
+            [2, 1, 1, 4, 2],
+            [1, 4, 1, 3, 2],
+            [1, 5, 2, 2, 1]
         ];
         this.dataBoard.createBoard(grid);
         this.createUICell();
@@ -70,6 +70,9 @@ export class BoardGame extends Component {
         this.changeTypeCommand.executeCommand(command);
         this.updateCellAround(signal.coords);
         this.updateCellArea();
+        if ([CELL_TYPE.SHADED, CELL_TYPE.NONE_SHADE].includes(signal.typeChange)) {
+            this.checkWin();
+        }
     }
 
     updateCellAround(coords: Tcoords, checker: Map<string, boolean> = new Map<string, boolean>()) {
@@ -114,6 +117,12 @@ export class BoardGame extends Component {
         console.log("nextAction", command !== undefined);
         if (command) {
             this.updateCellAround(command.actor.coords);
+        }
+    }
+
+    checkWin() {
+        if (this.dataBoard.isWin()) {
+            this.node.active = false;
         }
     }
 }
