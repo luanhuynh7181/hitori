@@ -3,16 +3,21 @@ import { DataCell } from '../data/DataCell';
 import { DataBoard } from '../data/DataBoard';
 import { UICell } from './ui_cell/UICell';
 import { BoardToucher } from './BoardToucher';
-import { Tcoords } from '../type';
+import { SignalChangeType, Tcoords } from '../Type';
 import { Signal } from '../design/Observer';
+import { ChangeTypeCommand } from '../design/history/ChangeTypeCommand';
+import { ChangeTypeHistory } from '../design/history/ChangeTypeHistory';
 const { ccclass, property } = _decorator;
 
 @ccclass('BoardGame')
 export class BoardGame extends Component {
+
     @property(Prefab) cellPrefab: Prefab = null;
     private dataBoard: DataBoard = new DataBoard();
     private toucher: BoardToucher = null;
     private cells: UICell[][] = [];
+    private signalChangeType: Signal<SignalChangeType> = new Signal<SignalChangeType>();
+    private changeTypeCommand: ChangeTypeHistory = new ChangeTypeHistory();
 
     start() {
         const grid = [
@@ -25,6 +30,7 @@ export class BoardGame extends Component {
         this.dataBoard.createBoard(grid);
         this.createUICell();
         this.toucher = new BoardToucher(this.node, this.dataBoard);
+        this.signalChangeType.addHandler(this.onChangeType, this);
     }
 
     createUICell() {
@@ -40,10 +46,8 @@ export class BoardGame extends Component {
                 const cell = row[j];
                 const node: Node = instantiate(this.cellPrefab);
                 const uiCell: UICell = node.getComponent(UICell);
-                uiCell.signalChangeType.addHandler(this.onChangeType, this);
                 const coords: Tcoords = { row: i, column: j };
-                uiCell.coords = coords;
-                uiCell.dataCell = cell;
+                uiCell.setup(coords, cell, this.signalChangeType);
                 uiRow.push(uiCell);
                 this.node.addChild(uiCell.node);
                 node.setPosition(posStart.x + i * cellSize, posStart.y - j * cellSize);
@@ -53,8 +57,18 @@ export class BoardGame extends Component {
         }
     }
 
-    onChangeType(uiCell: UICell) {
-        console.log('change type', uiCell.coords);
+    onChangeType(signal: SignalChangeType) {
+        const uiCell: UICell = this.cells[signal.coords.row][signal.coords.column];
+        const command = new ChangeTypeCommand(uiCell, signal.typeChange);
+        this.changeTypeCommand.executeCommand(command);
+    }
+
+    undoAction() {
+        const success = this.changeTypeCommand.undo();
+    }
+
+    nextAction() {
+        const success = this.changeTypeCommand.next();
     }
 }
 
