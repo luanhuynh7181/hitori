@@ -1,5 +1,5 @@
 import { _decorator, clamp, Component, EventTouch, instantiate, Node, Prefab, UI, UITransform, v3, Vec2 } from 'cc';
-import { DataCell } from '../data/DataCell';
+import { IDataCell } from '../data/DataCell';
 import { DataBoard } from '../data/DataBoard';
 import { UICell } from './ui_cell/UICell';
 import { BoardToucher } from './BoardToucher';
@@ -36,7 +36,7 @@ export class BoardGame extends Component {
     }
 
     createUICell() {
-        const board: DataCell[][] = this.dataBoard.board;
+        const board: IDataCell[][] = this.dataBoard.board;
         const padding: number = 3;
         const boardWidth = this.node.getComponent(UITransform).width;
         const cellSize = boardWidth / board.length;
@@ -68,15 +68,8 @@ export class BoardGame extends Component {
         const uiCell: UICell = this.getCell(signal.coords);
         const command = new ChangeTypeCommand(uiCell, signal.typeChange);
         this.changeTypeCommand.executeCommand(command);
-        if (signal.typeChange === CELL_TYPE.SHADED) {
-            this.updateCellAround(signal.coords);
-            return;
-        }
-
-        if (signal.typeChange === CELL_TYPE.NONE_SHADE) {
-            this.updateCellAround(signal.coords);
-            return;
-        }
+        this.updateCellAround(signal.coords);
+        this.updateCellArea();
     }
 
     updateCellAround(coords: Tcoords, checker: Map<string, boolean> = new Map<string, boolean>()) {
@@ -92,6 +85,19 @@ export class BoardGame extends Component {
         for (const dir of director) {
             const cell = this.getCell(dir);
             cell.dataCell.isShaded && this.updateCellAround(dir, checker);
+        }
+    }
+
+    updateCellArea() {
+        const areas: Tcoords[][] = this.dataBoard.getAreas();
+        areas.sort((a, b) => b.length - a.length);
+        for (let i = 0; i < areas.length; i++) {
+            const area = areas[i];
+            const type = i == 0 ? CELL_TYPE.NONE_SHADE : CELL_TYPE.INVALID_AREA;
+            for (const coords of area) {
+                const cell: UICell = this.getCell(coords);
+                cell.onChangeType(type);
+            }
         }
     }
 

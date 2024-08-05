@@ -1,5 +1,5 @@
-import { _decorator, Component, EventTouch, instantiate, Label, Node, Prefab, UITransform, Vec2 } from 'cc';
-import { DataCell } from '../../data/DataCell';
+import { _decorator, Color, Component, EventTouch, instantiate, Label, Node, Prefab, Sprite, UITransform, Vec2 } from 'cc';
+import { IDataCell } from '../../data/DataCell';
 import { UICellActionManager } from './UICellActionManager';
 import { UICellFlag, UICellInvalidArea, UICellInvalidCoord, UICellShaded, UICellUnshade } from './UICellType';
 import { CELL_TYPE } from '../../Enum';
@@ -14,13 +14,13 @@ export class UICell extends Component {
     @property(Node) imgBg: Node = null;
     @property(Label) lbNumber: Label = null;
 
-    private _dataCell: DataCell = null;
+    private _dataCell: IDataCell = null;
     private uiCellAction: UICellActionManager = null;
     private _coords: Tcoords = null;
     private _type: CELL_TYPE = null;
     private _signalChangeType: Signal<SignalChangeType> = null;
 
-    setup(coords: Tcoords, dataCell: DataCell, signalChangeType: Signal<SignalChangeType>) {
+    setup(coords: Tcoords, dataCell: IDataCell, signalChangeType: Signal<SignalChangeType>) {
         this._dataCell = dataCell;
         this._coords = coords;
         this._signalChangeType = signalChangeType;
@@ -44,7 +44,7 @@ export class UICell extends Component {
         return this._signalChangeType;
     }
 
-    public get dataCell(): DataCell {
+    public get dataCell(): IDataCell {
         return this._dataCell;
     }
 
@@ -68,6 +68,9 @@ export class UICell extends Component {
                 break;
             case CELL_TYPE.INVALID_COORDS:
                 typeChange = CELL_TYPE.NONE_SHADE;
+                break;
+            case CELL_TYPE.INVALID_AREA:
+                typeChange = CELL_TYPE.SHADED;
                 break;
         }
         this.emitSignalChangeType(typeChange);
@@ -95,14 +98,19 @@ export class UICell extends Component {
                 this.dataCell.isShaded = false;
                 break;
             case CELL_TYPE.INVALID_COORDS:
-                this.dataCell.isShaded = true;
                 this.uiCellAction.doAction(UICellInvalidCoord);
+                this.dataCell.isShaded = true;
                 break;
             case CELL_TYPE.INVALID_AREA:
-                this.dataCell.isShaded = false;
                 this.uiCellAction.doAction(UICellInvalidArea);
+                this.dataCell.isShaded = false;
                 break;
         }
+    }
+
+    public updateColor(color: string) {
+        const hex = Color.fromHEX(new Color(), color);
+        this.imgBg.getComponent(Sprite).color = hex;
     }
 }
 
