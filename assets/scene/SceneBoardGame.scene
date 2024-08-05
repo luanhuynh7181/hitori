@@ -603,8 +603,8 @@
     "__prefab": null,
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 100,
-      "height": 100
+      "width": 490,
+      "height": 490
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
@@ -626,12 +626,6 @@
     "cellPrefab": {
       "__uuid__": "de123a9c-2d0f-42b7-9d95-9f8d7f152f5e",
       "__expectedType__": "cc.Prefab"
-    },
-    "cellContainer": {
-      "__id__": 12
-    },
-    "nodeBoardGame": {
-      "__id__": 14
     },
     "_id": "f8XbSTDPFAFYw8QAgdUc4b"
   },
