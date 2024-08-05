@@ -23,20 +23,18 @@ export class DataBoard {
         this.board[row][col].value = value;
     }
 
-    public isvalidCoord(coords: Tcoords): boolean {
-        const director: Tcoords[] = Utility.getAllDirection();
-        for (const dir of director) {
-            const newRow = coords.row + dir.row;
-            const newCol = coords.column + dir.column;
-            if (newRow < 0 || newRow >= this.board.length || newCol < 0 || newCol >= this.board.length) {
-                continue;
-            }
-            if (this.board[newRow][newCol].isShaded) {
-                return false;
-            }
-        }
-        return true;
+    public isvalidCoords(coords: Tcoords): boolean {
+        return this.getCellAroundInvalid(coords).length === 0;
     }
 
-    // public 
+    public getCellAroundInvalid(coords: Tcoords): Tcoords[] {
+        const result: Tcoords[] = [];
+        const director: Tcoords[] = Utility.getCellAround(coords, this.board);
+        for (const dir of director) {
+            if (this.board[dir.row][dir.column].isShaded) {
+                result.push(dir);
+            }
+        }
+        return result;
+    }
 }

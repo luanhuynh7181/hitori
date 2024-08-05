@@ -15,11 +15,15 @@ export class DataCell {
         return this._value;
     }
 
-    public get isShaped(): boolean {
+    public get isShaded(): boolean {
         return this._isShaded;
     }
 
-    public set isShaded(isShaded: boolean) {
-        this._isShaded = isShaded;
+    public set isShaded(value: boolean) {
+        this._isShaded = value;
+    }
+
+    public isFlagged(): boolean {
+        return this._isShaded;
     }
 }

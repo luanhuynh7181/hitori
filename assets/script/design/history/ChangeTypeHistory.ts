@@ -10,21 +10,21 @@ export class ChangeTypeHistory {
         this.index = this.commandHistory.length - 1;
     }
 
-    next(): boolean {
+    next(): ChangeTypeCommand {
         const command = this.commandHistory[this.index + 1];
         if (command) {
             this.index++;
             command.execute();
         }
-        return command != null;
+        return command;
     }
 
-    undo(): boolean {
+    undo(): ChangeTypeCommand {
         const command = this.commandHistory[this.index];
         if (command) {
             this.index--;
             command.undo();
         }
-        return command != null;
+        return command;
     }
 }

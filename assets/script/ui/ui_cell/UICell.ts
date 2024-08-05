@@ -44,6 +44,9 @@ export class UICell extends Component {
         return this._signalChangeType;
     }
 
+    public get dataCell(): DataCell {
+        return this._dataCell;
+    }
 
     updateSize(size: number) {
         this.imgBg.getComponent(UITransform).width = size;
@@ -63,6 +66,9 @@ export class UICell extends Component {
             case CELL_TYPE.FLAG:
                 typeChange = CELL_TYPE.NONE_SHADE;
                 break;
+            case CELL_TYPE.INVALID_COORDS:
+                typeChange = CELL_TYPE.NONE_SHADE;
+                break;
         }
         this.emitSignalChangeType(typeChange);
     }
@@ -73,30 +79,31 @@ export class UICell extends Component {
 
 
     onChangeType(type: CELL_TYPE) {
+        if (this._type === type) return;
         this._type = type;
         switch (type) {
             case CELL_TYPE.NONE_SHADE:
                 this.uiCellAction.doAction(UICellUnshade);
+                this.dataCell.isShaded = false;
                 break;
             case CELL_TYPE.SHADED:
                 this.uiCellAction.doAction(UICellShaded);
+                this.dataCell.isShaded = true;
                 break;
             case CELL_TYPE.FLAG:
                 this.uiCellAction.doAction(UICellFlag);
+                this.dataCell.isShaded = false;
+                break;
+            case CELL_TYPE.INVALID_COORDS:
+                this.dataCell.isShaded = true;
+                this.uiCellAction.doAction(UICellInvalidCoord);
+                break;
+            case CELL_TYPE.INVALID_AREA:
+                this.dataCell.isShaded = false;
+                this.uiCellAction.doAction(UICellInvalidArea);
                 break;
         }
     }
-
-    showInvaldCoords() {
-        this.uiCellAction.doAction(UICellInvalidCoord);
-        this._type = CELL_TYPE.INVALID_COORDS;
-    }
-
-    showInvaldArea() {
-        this.uiCellAction.doAction(UICellInvalidArea);
-        this._type = CELL_TYPE.INVALID_AREA;
-    }
-
 }
 
 
