@@ -3,8 +3,8 @@ import { IDataCell } from '../../data/DataCell';
 import { UICellActionManager } from './UICellActionManager';
 import { UICellFlag, UICellInvalidArea, UICellInvalidCoord, UICellShaded, UICellUnshade } from './UICellType';
 import { CELL_TYPE } from '../../Enum';
-import { Signal } from '../../design/Observer';
-import { SignalChangeType, Tcoords } from '../../Type';
+import { Signal } from '../../design/Signal';
+import { SignalChangeType, TCellPriority, TCellPriorityInit, Tcoords } from '../../Type';
 
 const { ccclass, property } = _decorator;
 
@@ -18,18 +18,15 @@ export class UICell extends Component {
     private uiCellAction: UICellActionManager = null;
     private _coords: Tcoords = null;
     private _type: CELL_TYPE = null;
-    private _signalChangeType: Signal<SignalChangeType> = null;
-
-    setup(coords: Tcoords, dataCell: IDataCell, signalChangeType: Signal<SignalChangeType>) {
+    private _priority: TCellPriority = { ...TCellPriorityInit };
+    setup(coords: Tcoords, dataCell: IDataCell) {
         this._dataCell = dataCell;
         this._coords = coords;
-        this._signalChangeType = signalChangeType;
-
         this.lbNumber.string = dataCell.value.toString();
+
         this.uiCellAction = new UICellActionManager(this);
         this.uiCellAction.doAction(UICellUnshade);
         this._type = CELL_TYPE.NONE_SHADE;
-        this.imgBg.on(Node.EventType.TOUCH_START, this.onTouchBegin, this);
     }
 
     public get coords(): Tcoords {
@@ -40,12 +37,12 @@ export class UICell extends Component {
         return this._type;
     }
 
-    public get signalChangeType(): Signal<SignalChangeType> {
-        return this._signalChangeType;
-    }
-
     public get dataCell(): IDataCell {
         return this._dataCell;
+    }
+
+    public get priority(): TCellPriority {
+        return this._priority;
     }
 
     updateSize(size: number) {
@@ -54,58 +51,27 @@ export class UICell extends Component {
         this.lbNumber.fontSize = size * 0.7;
     }
 
-    onTouchBegin(event: EventTouch) {
-        let typeChange = this._type;
-        switch (this._type) {
-            case CELL_TYPE.NONE_SHADE:
-                typeChange = CELL_TYPE.SHADED;
-                break;
-            case CELL_TYPE.SHADED:
-                typeChange = CELL_TYPE.FLAG;
-                break;
-            case CELL_TYPE.FLAG:
-                typeChange = CELL_TYPE.NONE_SHADE;
-                break;
-            case CELL_TYPE.INVALID_COORDS:
-                typeChange = CELL_TYPE.NONE_SHADE;
-                break;
-            case CELL_TYPE.INVALID_AREA:
-                typeChange = CELL_TYPE.SHADED;
-                break;
+    updateUIByPriority() { // check priority and update UI compare with previous priority
+        const priority: TCellPriority = this._priority;
+        if (priority.isInvalidCoords) {
+            this.uiCellAction.doAction(UICellInvalidCoord);
+            return;
         }
-        this.emitSignalChangeType(typeChange);
-    }
-
-    emitSignalChangeType(type: CELL_TYPE) {
-        this._signalChangeType.trigger({ typeChange: type, coords: this._coords });
-    }
-
-
-    onChangeType(type: CELL_TYPE) {
-        if (this._type === type) return;
-        this._type = type;
-        switch (type) {
-            case CELL_TYPE.NONE_SHADE:
-                this.uiCellAction.doAction(UICellUnshade);
-                this.dataCell.isShaded = false;
-                break;
-            case CELL_TYPE.SHADED:
-                this.uiCellAction.doAction(UICellShaded);
-                this.dataCell.isShaded = true;
-                break;
-            case CELL_TYPE.FLAG:
-                this.uiCellAction.doAction(UICellFlag);
-                this.dataCell.isShaded = false;
-                break;
-            case CELL_TYPE.INVALID_COORDS:
-                this.uiCellAction.doAction(UICellInvalidCoord);
-                this.dataCell.isShaded = true;
-                break;
-            case CELL_TYPE.INVALID_AREA:
-                this.uiCellAction.doAction(UICellInvalidArea);
-                this.dataCell.isShaded = false;
-                break;
+        if (this.dataCell.isShaded) {
+            this.uiCellAction.doAction(UICellShaded);
+            return;
         }
+
+        if (priority.isInvalidArea) {
+            this.uiCellAction.doAction(UICellInvalidArea);
+            return;
+        }
+
+        if (priority.isFlag) {
+            this.uiCellAction.doAction(UICellFlag);
+            return;
+        }
+        this.uiCellAction.doAction(UICellUnshade);
     }
 
     public updateColor(color: string) {

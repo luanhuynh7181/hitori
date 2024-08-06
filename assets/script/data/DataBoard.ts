@@ -19,11 +19,7 @@ export class DataBoard {
         return this._board;
     }
 
-    public updateValue(row: number, col: number, value: number) {
-        this.board[row][col].value = value;
-    }
-
-    public isvalidCoords(coords: Tcoords): boolean {
+    public isValidCoords(coords: Tcoords): boolean {
         if (!this.board[coords.row][coords.column].isShaded) return true;
         return this.getCellAroundInvalid(coords).length === 0;
     }
@@ -31,7 +27,7 @@ export class DataBoard {
     isValidAllCoords(): boolean {
         for (let i = 0; i < this.board.length; i++) {
             for (let j = 0; j < this.board[i].length; j++) {
-                if (!this.isvalidCoords({ row: i, column: j })) {
+                if (!this.isValidCoords({ row: i, column: j })) {
                     return false;
                 }
             }

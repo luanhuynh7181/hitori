@@ -11,3 +11,19 @@ export type SignalChangeType = {
     typeChange: CELL_TYPE;
     coords: Tcoords;
 }
+
+export type TCellPriority = {
+    isInvalidCoords: boolean;
+    isShaded: boolean;
+    isFlag: boolean;
+    isInvalidArea: boolean;
+    isNormal: boolean;
+}
+
+export const TCellPriorityInit: TCellPriority = {
+    isInvalidCoords: false,
+    isShaded: false,
+    isFlag: false,
+    isInvalidArea: false,
+    isNormal: false
+};

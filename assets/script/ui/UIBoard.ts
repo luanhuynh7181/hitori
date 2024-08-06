@@ -2,9 +2,9 @@ import { _decorator, clamp, Component, EventTouch, instantiate, Node, Prefab, UI
 import { IDataCell } from '../data/DataCell';
 import { DataBoard } from '../data/DataBoard';
 import { UICell } from './ui_cell/UICell';
-import { BoardToucher } from './BoardToucher';
+import { BoardMouse } from './BoardMouse';
 import { SignalChangeType, Tcoords } from '../Type';
-import { Signal } from '../design/Observer';
+import { Signal } from '../design/Signal';
 import { ChangeTypeCommand } from '../design/history/ChangeTypeCommand';
 import { ChangeTypeHistory } from '../design/history/ChangeTypeHistory';
 import { CELL_TYPE } from '../Enum';
@@ -16,7 +16,7 @@ export class BoardGame extends Component {
 
     @property(Prefab) cellPrefab: Prefab = null;
     private dataBoard: DataBoard = new DataBoard();
-    private toucher: BoardToucher = null;
+    private toucher: BoardMouse = null;
     private cells: UICell[][] = [];
     private signalChangeType: Signal<SignalChangeType> = new Signal<SignalChangeType>();
     private changeTypeCommand: ChangeTypeHistory = new ChangeTypeHistory();
@@ -31,8 +31,12 @@ export class BoardGame extends Component {
         ];
         this.dataBoard.createBoard(grid);
         this.createUICell();
-        this.toucher = new BoardToucher(this.node, this.dataBoard);
-        this.signalChangeType.addHandler(this.onChangeType, this);
+        this.toucher = new BoardMouse(
+            this.node,
+            this.dataBoard,
+            this.onHoverCell.bind(this),
+            this.onLeftClick.bind(this),
+            this.onRightClick.bind(this));
     }
 
     createUICell() {
@@ -49,7 +53,7 @@ export class BoardGame extends Component {
                 const node: Node = instantiate(this.cellPrefab);
                 const uiCell: UICell = node.getComponent(UICell);
                 const coords: Tcoords = { row: i, column: j };
-                uiCell.setup(coords, cell, this.signalChangeType);
+                uiCell.setup(coords, cell);
                 uiRow.push(uiCell);
                 this.node.addChild(uiCell.node);
                 node.setPosition(posStart.x + j * cellSize, posStart.y - i * cellSize);
@@ -63,67 +67,102 @@ export class BoardGame extends Component {
         return this.cells[coords.row][coords.column];
     }
 
-    onChangeType(signal: SignalChangeType) {
-        console.log("onChangeType", signal);
-        const uiCell: UICell = this.getCell(signal.coords);
-        const command = new ChangeTypeCommand(uiCell, signal.typeChange);
-        this.changeTypeCommand.executeCommand(command);
-        this.updateCellAround(signal.coords);
-        this.updateCellArea();
-        if ([CELL_TYPE.SHADED, CELL_TYPE.NONE_SHADE].includes(signal.typeChange)) {
-            this.checkWin();
+    onChangeShade(coords: Tcoords) {
+        this.updatePriorityValidAtCell(coords);
+        this.updateCellNonShadeOnBoard();
+        this.updateUIAllCell();
+        this.addToHistory();
+        this.checkWin();
+    }
+
+    onChangeFlag(coords: Tcoords) {
+        const uiCell: UICell = this.getCell(coords);
+    }
+
+    addToHistory() {
+        // const command = new ChangeTypeCommand(uiCell, signal.typeChange);
+        // this.changeTypeCommand.executeCommand(command);
+    }
+
+    updateUIAllCell() {
+        for (const row of this.cells) {
+            for (const cell of row) {
+                cell.updateUIByPriority();
+            }
         }
     }
 
-    updateCellAround(coords: Tcoords, checker: Map<string, boolean> = new Map<string, boolean>()) {
+    updatePriorityValidAtCell(coords: Tcoords, checker: Map<string, boolean> = new Map<string, boolean>()) {
+
         const keyCheck = `${coords.row}_${coords.column}`;
         if (checker.has(keyCheck)) return;
         checker.set(keyCheck, true);
-        const uiCell: UICell = this.getCell(coords);
-        if (uiCell.dataCell.isShaded) {
-            const isValid = this.dataBoard.isvalidCoords(coords);
-            uiCell.onChangeType(isValid ? CELL_TYPE.SHADED : CELL_TYPE.INVALID_COORDS);
+        const cell = this.getCell(coords);
+
+        if (cell.dataCell.isShaded) {
+            cell.priority.isInvalidCoords = !this.dataBoard.isValidCoords(coords);
         }
+
         const director: Tcoords[] = Utility.getCellAround(coords, this.cells);
         for (const dir of director) {
             const cell = this.getCell(dir);
-            cell.dataCell.isShaded && this.updateCellAround(dir, checker);
+            if (cell.dataCell.isShaded) {
+                this.updatePriorityValidAtCell(dir, checker);
+            }
         }
     }
 
-    updateCellArea() {
+
+    updateCellNonShadeOnBoard() {
         const areas: Tcoords[][] = this.dataBoard.getAreas();
         areas.sort((a, b) => b.length - a.length);
         for (let i = 0; i < areas.length; i++) {
             const area = areas[i];
-            const type = i == 0 ? CELL_TYPE.NONE_SHADE : CELL_TYPE.INVALID_AREA;
             for (const coords of area) {
                 const cell: UICell = this.getCell(coords);
-                cell.onChangeType(type);
+                cell.priority.isInvalidArea = i > 0;
             }
         }
     }
 
     undoAction() {
-        const command: ChangeTypeCommand = this.changeTypeCommand.undo();
-        console.log("undoAction", command !== undefined);
-        if (command) {
-            this.updateCellAround(command.actor.coords);
-        }
+        // const command: ChangeTypeCommand = this.changeTypeCommand.undo();
+        // console.log("undoAction", command !== undefined);
+        // if (command) {
+        //     this.updateCellAround(command.actor.coords);
+        // }
     }
 
     nextAction() {
-        const command: ChangeTypeCommand = this.changeTypeCommand.next();
-        console.log("nextAction", command !== undefined);
-        if (command) {
-            this.updateCellAround(command.actor.coords);
-        }
+        // const command: ChangeTypeCommand = this.changeTypeCommand.next();
+        // console.log("nextAction", command !== undefined);
+        // if (command) {
+        //     this.updateCellAround(command.actor.coords);
+        // }
     }
 
     checkWin() {
         if (this.dataBoard.isWin()) {
             this.node.active = false;
         }
+    }
+
+    onHoverCell(coords: Tcoords) {
+    }
+
+    onLeftClick(coords: Tcoords) {
+        const cell: UICell = this.getCell(coords);
+        cell.dataCell.isShaded = !cell.dataCell.isShaded;
+        if (!cell.dataCell.isShaded) {
+            cell.priority.isInvalidCoords = false;
+        }
+        this.onChangeShade(coords);
+    }
+
+    onRightClick(coords: Tcoords) {
+        const cell: UICell = this.getCell(coords);
+        cell.priority.isFlag = !cell.priority.isFlag;
+        this.onChangeFlag(coords);
     }
 }
 

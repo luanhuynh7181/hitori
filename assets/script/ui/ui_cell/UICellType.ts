@@ -4,7 +4,6 @@ import { UICell } from "./UICell";
 export abstract class IUICellAction {
     abstract execute(cell: UICell): void;
     protected updateColor(cell: UICell, color: string) {
-
     }
 }
 
