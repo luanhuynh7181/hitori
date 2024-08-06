@@ -37,6 +37,7 @@ export class BoardGame extends Component {
             this.onHoverCell.bind(this),
             this.onLeftClick.bind(this),
             this.onRightClick.bind(this));
+        this.addToHistory();
     }
 
     createUICell() {
@@ -68,20 +69,26 @@ export class BoardGame extends Component {
     }
 
     onChangeShade(coords: Tcoords) {
-        this.updatePriorityValidAtCell(coords);
-        this.updateCellNonShadeOnBoard();
+        this.updatePriorityValidCoords(coords);
+        this.updatePriorityValidArea();
         this.updateUIAllCell();
         this.addToHistory();
         this.checkWin();
     }
 
-    onChangeFlag(coords: Tcoords) {
-        const uiCell: UICell = this.getCell(coords);
+    onChangeFlag(coords: Tcoords, isChangeShade: boolean) {
+        if (isChangeShade) {
+            this.updatePriorityValidCoords(coords);
+            return;
+        }
+        this.updateUIAllCell();
+        this.addToHistory();
+        this.checkWin();
     }
 
     addToHistory() {
-        // const command = new ChangeTypeCommand(uiCell, signal.typeChange);
-        // this.changeTypeCommand.executeCommand(command);
+        const command = new ChangeTypeCommand(this.cells);
+        this.changeTypeCommand.add(command);
     }
 
     updateUIAllCell() {
@@ -92,7 +99,7 @@ export class BoardGame extends Component {
         }
     }
 
-    updatePriorityValidAtCell(coords: Tcoords, checker: Map<string, boolean> = new Map<string, boolean>()) {
+    updatePriorityValidCoords(coords: Tcoords, checker: Map<string, boolean> = new Map<string, boolean>()) {
 
         const keyCheck = `${coords.row}_${coords.column}`;
         if (checker.has(keyCheck)) return;
@@ -107,13 +114,12 @@ export class BoardGame extends Component {
         for (const dir of director) {
             const cell = this.getCell(dir);
             if (cell.dataCell.isShaded) {
-                this.updatePriorityValidAtCell(dir, checker);
+                this.updatePriorityValidCoords(dir, checker);
             }
         }
     }
 
-
-    updateCellNonShadeOnBoard() {
+    updatePriorityValidArea() {
         const areas: Tcoords[][] = this.dataBoard.getAreas();
         areas.sort((a, b) => b.length - a.length);
         for (let i = 0; i < areas.length; i++) {
@@ -126,19 +132,11 @@ export class BoardGame extends Component {
     }
 
     undoAction() {
-        // const command: ChangeTypeCommand = this.changeTypeCommand.undo();
-        // console.log("undoAction", command !== undefined);
-        // if (command) {
-        //     this.updateCellAround(command.actor.coords);
-        // }
+        const command: ChangeTypeCommand = this.changeTypeCommand.undo();
     }
 
     nextAction() {
-        // const command: ChangeTypeCommand = this.changeTypeCommand.next();
-        // console.log("nextAction", command !== undefined);
-        // if (command) {
-        //     this.updateCellAround(command.actor.coords);
-        // }
+        const command: ChangeTypeCommand = this.changeTypeCommand.next();
     }
 
     checkWin() {
@@ -156,13 +154,21 @@ export class BoardGame extends Component {
         if (!cell.dataCell.isShaded) {
             cell.priority.isInvalidCoords = false;
         }
+        cell.priority.isFlag = false;
         this.onChangeShade(coords);
     }
 
     onRightClick(coords: Tcoords) {
         const cell: UICell = this.getCell(coords);
+        if (cell.priority.isInvalidArea) return;
+        if (cell.dataCell.isShaded) return;
         cell.priority.isFlag = !cell.priority.isFlag;
-        this.onChangeFlag(coords);
+        const isShaded = cell.dataCell.isShaded;
+        if (!cell.priority.isFlag) {
+            cell.priority.isInvalidArea = false;
+        }
+        cell.dataCell.isShaded = false;
+        this.onChangeFlag(coords, isShaded);
     }
 }
 

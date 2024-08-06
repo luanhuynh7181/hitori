@@ -45,6 +45,10 @@ export class UICell extends Component {
         return this._priority;
     }
 
+    public set priority(value: TCellPriority) {
+        this._priority = value;
+    }
+
     updateSize(size: number) {
         this.imgBg.getComponent(UITransform).width = size;
         this.imgBg.getComponent(UITransform).height = size;
@@ -66,7 +70,6 @@ export class UICell extends Component {
             this.uiCellAction.doAction(UICellInvalidArea);
             return;
         }
-
         if (priority.isFlag) {
             this.uiCellAction.doAction(UICellFlag);
             return;
