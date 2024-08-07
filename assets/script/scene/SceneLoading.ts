@@ -1,4 +1,4 @@
-import { _decorator, Component, JsonAsset, Node, resources } from 'cc';
+import { _decorator, Component, director, JsonAsset, Node, resources } from 'cc';
 import { PACK_TYPE } from '../Constant';
 import BoardConfig from '../board/BoardConfig';
 import PackConfig from '../board/PackConfig';
@@ -7,9 +7,11 @@ const { ccclass, property } = _decorator;
 
 @ccclass('SceneLoading')
 export class SceneLoading extends Component {
-    start() {
+    async start() {
         console.log("sceneLoading")
-        this.loadBoard();
+        await this.loadBoard();
+        // await this.preloadSceneAsync('SceneChooseBoard');
+        director.loadScene("SceneLobby");
     }
 
     async loadBoard() {
@@ -35,9 +37,6 @@ export class SceneLoading extends Component {
                 }
                 DataConfig.addPackConfig(data.name, pack);
             }
-            console.log(DataConfig.getPackConfig(PACK_TYPE.CLASSIC));
-            console.log(DataConfig.getPackConfig(PACK_TYPE.DAILY));
-            console.log(DataConfig.getPackConfig(PACK_TYPE.CUSTOM));
         }
         catch (err) {
             console.error(err);
@@ -68,8 +67,16 @@ export class SceneLoading extends Component {
         });
     }
 
-    update(deltaTime: number) {
-
+    preloadSceneAsync(sceneName: string) {
+        return new Promise<void>((resolve, reject) => {
+            director.preloadScene(sceneName, (error) => {
+                if (error) {
+                    reject(error);
+                } else {
+                    resolve();
+                }
+            });
+        });
     }
 }
 

@@ -2,12 +2,12 @@
   "ver": "1.1.50",
   "importer": "prefab",
   "imported": true,
-  "uuid": "f48ac04f-1a10-4bc7-9c4f-9529889f8fbf",
+  "uuid": "96597db1-446f-42a8-b526-bfadab98756a",
   "files": [
     ".json"
   ],
   "subMetas": {},
   "userData": {
-    "syncNodeName": "pvBoardItem"
+    "syncNodeName": "pvDot"
   }
 }

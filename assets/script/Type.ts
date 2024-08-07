@@ -1,3 +1,4 @@
+import { PACK_TYPE } from "./Constant";
 import { CELL_TYPE } from "./Enum";
 
 // create type for board with row column
@@ -27,3 +28,9 @@ export const TCellPriorityInit: TCellPriority = {
     isInvalidArea: false,
     isNormal: false
 };
+
+export type BoardInfo = {
+    packType: PACK_TYPE
+    boardSize: number
+    boardIndex: number
+}

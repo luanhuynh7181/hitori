@@ -3,12 +3,15 @@ import { IDataCell } from '../data/DataCell';
 import { DataBoard } from '../data/DataBoard';
 import { UICell } from './ui_cell/UICell';
 import { BoardMouse } from './BoardMouse';
-import { SignalChangeType, Tcoords } from '../Type';
+import { BoardInfo, SignalChangeType, Tcoords } from '../Type';
 import { Signal } from '../design/Signal';
 import { ChangeTypeCommand } from '../design/history/ChangeTypeCommand';
 import { ChangeTypeHistory } from '../design/history/ChangeTypeHistory';
 import { CELL_TYPE } from '../Enum';
 import { Utility } from '../Utility';
+import DataChangeScene from '../data/DataChangeScene';
+import BoardConfig from '../board/BoardConfig';
+import DataConfig from '../board/DataConfig';
 const { ccclass, property } = _decorator;
 
 @ccclass('BoardGame')
@@ -22,14 +25,9 @@ export class BoardGame extends Component {
     private changeTypeCommand: ChangeTypeHistory = new ChangeTypeHistory();
 
     start() {
-        const grid = [
-            [4, 2, 5, 2, 4],
-            [4, 5, 2, 5, 1],
-            [2, 1, 1, 4, 2],
-            [1, 4, 1, 3, 2],
-            [1, 5, 2, 2, 1]
-        ];
-        this.dataBoard.createBoard(grid);
+        const boardInfo: BoardInfo = DataChangeScene.boardInfo;
+        const boardConfig: BoardConfig = DataConfig.getBoardConfig(boardInfo);
+        this.dataBoard.createBoard(boardConfig.data);
         this.createUICell();
         this.toucher = new BoardMouse(
             this.node,
@@ -158,6 +156,10 @@ export class BoardGame extends Component {
         this.onChangeShade(coords);
     }
 
+    showValidNumber() {
+        // this.dataBoard.showValidNumber();
+    }
+
     onRightClick(coords: Tcoords) {
         const cell: UICell = this.getCell(coords);
         if (cell.priority.isInvalidArea) return;
@@ -171,5 +173,3 @@ export class BoardGame extends Component {
         this.onChangeFlag(coords, isShaded);
     }
 }
-
-

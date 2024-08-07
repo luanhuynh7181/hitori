@@ -1,4 +1,6 @@
 import { PACK_TYPE } from "../Constant";
+import { BoardInfo } from "../Type";
+import BoardConfig from "./BoardConfig";
 import PackConfig from "./PackConfig";
 
 
@@ -16,6 +18,13 @@ class _DataConfig {
     public getPackConfig(packType: PACK_TYPE): PackConfig {
         return this.boardData.get(packType);
     }
+
+    public getBoardConfig(info: BoardInfo): BoardConfig {
+        const pack = this.boardData.get(info.packType);
+        const boardConfig = pack.getBoardConfig(info.boardSize);
+        return boardConfig[info.boardIndex];
+    }
+
 }
 
 const DataConfig = _DataConfig._instance;
