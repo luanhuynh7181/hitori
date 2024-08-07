@@ -1,5 +1,5 @@
 
-class BoardGame {
+export default class BoardConfig {
     constructor(private _data: number[][], private _solution: number[][]) {
     }
 
@@ -11,5 +11,3 @@ class BoardGame {
         return this._solution;
     }
 }
-
-export default BoardGame;
