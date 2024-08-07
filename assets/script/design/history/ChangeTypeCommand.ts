@@ -3,8 +3,7 @@ import { UICell } from "../../ui/ui_cell/UICell";
 
 export class ChangeTypeCommand {
     private data: TCellPriority[][] = [];
-    private uiCells: UICell[][];
-    constructor(uiCells: UICell[][]) {
+    constructor(private uiCells: UICell[][]) {
         this.uiCells = uiCells;
         for (let i = 0; i < uiCells.length; i++) {
             const row: TCellPriority[] = [];
