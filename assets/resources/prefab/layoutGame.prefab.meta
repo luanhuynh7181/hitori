@@ -2,13 +2,12 @@
   "ver": "1.1.50",
   "importer": "prefab",
   "imported": true,
-  "uuid": "a80a7e59-ea49-4fe9-8f45-0215236814b2",
+  "uuid": "11ec6feb-0b24-4b9f-976c-d3ef44fbc006",
   "files": [
     ".json"
   ],
   "subMetas": {},
   "userData": {
-    "syncNodeName": "nodeLayoutBoard",
-    "persistent": true
+    "syncNodeName": "layoutGame"
   }
 }

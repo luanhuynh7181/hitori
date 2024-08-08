@@ -1,21 +1,20 @@
 import { _decorator, Component, director, Label, Node } from 'cc';
 import { PACK_TYPE } from '../Constant';
+import { SceneGame } from '../scene/SceneGame';
+import { EVENT_TYPE, GAME_LAYOUT } from '../Enum';
+import { BoardInfo } from '../Type';
 const { ccclass, property } = _decorator;
 
 @ccclass('PageviewItem')
 export class PageviewItem extends Component {
     @property(Label) label: Label = null;
-    private packType: PACK_TYPE = null;
-    private boardSize: number = null;
-    private boardIndex: number = null;
+    private boardInfo: BoardInfo = null;
     start() {
 
     }
 
     setup(packType: PACK_TYPE, boardSize: number, boardIndex: number) {
-        this.packType = packType;
-        this.boardSize = boardSize;
-        this.boardIndex = boardIndex;
+        this.boardInfo = { packType, boardSize, boardIndex };
         this.label.string = `${boardIndex + 1}`;
     }
 
@@ -24,7 +23,7 @@ export class PageviewItem extends Component {
     }
 
     onClick() {
-
+        director.emit(EVENT_TYPE.SWITCH_LAYOUT, { layout: GAME_LAYOUT.GAME, data: this.boardInfo });
     }
 }
 

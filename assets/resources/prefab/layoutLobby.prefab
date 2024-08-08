@@ -734,7 +734,7 @@
       }
     ],
     "_interactable": true,
-    "_transition": 3,
+    "_transition": 0,
     "_normalColor": {
       "__type__": "cc.Color",
       "r": 214,
@@ -792,7 +792,9 @@
   },
   {
     "__type__": "cc.ClickEvent",
-    "target": null,
+    "target": {
+      "__id__": 1
+    },
     "component": "",
     "_componentId": "2be22mjAipKG5THTOjrFyIz",
     "handler": "onClickBoard",
@@ -1121,7 +1123,7 @@
       }
     ],
     "_interactable": true,
-    "_transition": 3,
+    "_transition": 0,
     "_normalColor": {
       "__type__": "cc.Color",
       "r": 214,
@@ -1179,7 +1181,9 @@
   },
   {
     "__type__": "cc.ClickEvent",
-    "target": null,
+    "target": {
+      "__id__": 1
+    },
     "component": "",
     "_componentId": "2be22mjAipKG5THTOjrFyIz",
     "handler": "onClickBoard",
@@ -1508,7 +1512,7 @@
       }
     ],
     "_interactable": true,
-    "_transition": 3,
+    "_transition": 0,
     "_normalColor": {
       "__type__": "cc.Color",
       "r": 214,
@@ -1566,7 +1570,9 @@
   },
   {
     "__type__": "cc.ClickEvent",
-    "target": null,
+    "target": {
+      "__id__": 1
+    },
     "component": "",
     "_componentId": "2be22mjAipKG5THTOjrFyIz",
     "handler": "onClickBoard",
@@ -3125,6 +3131,7 @@
     "__prefab": {
       "__id__": 120
     },
+    "sceneGame": null,
     "_id": ""
   },
   {
