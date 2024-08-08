@@ -13,6 +13,11 @@ export class BoardMouse {
         node.on(Node.EventType.MOUSE_MOVE, this.onMouseMove, this);
         node.on(Node.EventType.MOUSE_DOWN, this.onMouseDown, this);
     }
+
+    public updateDataBoard(dataBoard: DataBoard) {
+        this.dataBoard = dataBoard;
+    }
+
     addTouchListener(node: Node) {
         node.on(Node.EventType.TOUCH_START, this.onTouchBegin, this);
         node.on(Node.EventType.TOUCH_MOVE, this.onTouchMove, this);

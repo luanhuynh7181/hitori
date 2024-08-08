@@ -1,4 +1,4 @@
-import { _decorator, clamp, Component, EventTouch, instantiate, Node, Prefab, UI, UITransform, v3, Vec2 } from 'cc';
+import { _decorator, clamp, Component, director, EventTouch, instantiate, Node, Prefab, UI, UITransform, v3, Vec2 } from 'cc';
 import { DataBoard } from '../../data/DataBoard';
 import { BoardMouse } from '../../ui/BoardMouse';
 import { UICell } from '../../ui/ui_cell/UICell';
@@ -8,6 +8,9 @@ import { IDataCell } from '../../data/DataCell';
 import { BoardInfo, Tcoords } from '../../Type';
 import { ChangeTypeCommand } from '../../design/history/ChangeTypeCommand';
 import { Utility } from '../../Utility';
+import BoardConfig from '../../board/BoardConfig';
+import DataConfig from '../../board/DataConfig';
+import { EVENT_TYPE, GAME_LAYOUT } from '../../Enum';
 
 const { ccclass, property } = _decorator;
 
@@ -15,29 +18,56 @@ const { ccclass, property } = _decorator;
 export class LayoutGame extends Component {
 
     @property(Prefab) cellPrefab: Prefab = null;
+    @property(Node) nodeBoardGame: Node = null;
+    @property(Node) nodeBg: Node = null;
     private dataBoard: DataBoard = new DataBoard();
     private toucher: BoardMouse = null;
     private cells: UICell[][] = [];
     private changeTypeCommand: ChangeTypeHistory = new ChangeTypeHistory();
 
-    start() {
-        // const boardInfo: BoardInfo = { packType: 1, boardSize: 5, boardIndex: 0 };
-        // const boardConfig: BoardConfig = DataConfig.getBoardConfig(boardInfo);
-        // this.dataBoard.createBoard(boardConfig.data);
-        // this.createUICell();
-        // this.toucher = new BoardMouse(
-        //     this.node,
-        //     this.dataBoard,
-        //     this.onHoverCell.bind(this),
-        //     this.onLeftClick.bind(this),
-        //     this.onRightClick.bind(this));
-        // this.addToHistory();
+    onLoad() {
+        this.toucher = new BoardMouse(
+            this.nodeBoardGame,
+            this.dataBoard,
+            this.onHoverCell.bind(this),
+            this.onLeftClick.bind(this),
+            this.onRightClick.bind(this));
+    }
+
+    onShow(boardInfo: BoardInfo) {
+        this.clear()
+        const boardConfig: BoardConfig = DataConfig.getBoardConfig(boardInfo);
+        const max = 900;
+        const min = 500;
+        const width = (max - min) / 16 * boardConfig.data.length + min;
+        this.nodeBoardGame.getComponent(UITransform).width = width;
+        this.nodeBoardGame.getComponent(UITransform).height = width;
+
+        this.nodeBg.getComponent(UITransform).width = width + 20;
+        this.nodeBg.getComponent(UITransform).height = width + 30;
+        this.nodeBoardGame.active = true;
+        this.dataBoard.createBoard(boardConfig.data);
+        console.log(this.dataBoard);
+        this.toucher.updateDataBoard(this.dataBoard);
+        this.createUICell();
+        this.addToHistory();
+    }
+
+    clear() {
+        for (const row of this.cells) {
+            for (const cell of row) {
+                cell.node.destroy();
+            }
+        }
+        this.cells = [];
+        this.changeTypeCommand = new ChangeTypeHistory();
+        this.dataBoard = new DataBoard();
     }
 
     createUICell() {
         const board: IDataCell[][] = this.dataBoard.board;
         const padding: number = 3;
-        const boardWidth = this.node.getComponent(UITransform).width;
+        const boardWidth = this.nodeBoardGame.getComponent(UITransform).width;
         const cellSize = boardWidth / board.length;
         const posStart: Vec2 = new Vec2(-boardWidth / 2 + cellSize / 2, boardWidth / 2 - cellSize / 2);
         for (let i = 0; i < board.length; i++) {
@@ -50,7 +80,7 @@ export class LayoutGame extends Component {
                 const coords: Tcoords = { row: i, column: j };
                 uiCell.setup(coords, cell);
                 uiRow.push(uiCell);
-                this.node.addChild(uiCell.node);
+                this.nodeBoardGame.addChild(uiCell.node);
                 node.setPosition(posStart.x + j * cellSize, posStart.y - i * cellSize);
                 uiCell.updateSize(cellSize - padding);
             }
@@ -135,7 +165,7 @@ export class LayoutGame extends Component {
 
     checkWin() {
         if (this.dataBoard.isWin()) {
-            this.node.active = false;
+            this.nodeBoardGame.active = false;
         }
     }
 
@@ -169,6 +199,8 @@ export class LayoutGame extends Component {
         this.onChangeFlag(coords, isShaded);
     }
 
-    onShow(data: BoardInfo) {
+    onClickBack() {
+        director.emit(EVENT_TYPE.SWITCH_LAYOUT, { layout: GAME_LAYOUT.LOBBY, data: null });
     }
+
 }
