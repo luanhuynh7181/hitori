@@ -20,6 +20,8 @@ export class LayoutGame extends Component {
     @property(Prefab) cellPrefab: Prefab = null;
     @property(Node) nodeBoardGame: Node = null;
     @property(Node) nodeBg: Node = null;
+    @property(Node) imgTarget: Node = null;
+
     private dataBoard: DataBoard = new DataBoard();
     private toucher: BoardMouse = null;
     private cells: UICell[][] = [];
@@ -28,10 +30,11 @@ export class LayoutGame extends Component {
     onLoad() {
         this.toucher = new BoardMouse(
             this.nodeBoardGame,
-            this.dataBoard,
-            this.onHoverCell.bind(this),
+            this.cells,
+            this.imgTarget,
             this.onLeftClick.bind(this),
-            this.onRightClick.bind(this));
+            this.onRightClick.bind(this)
+        );
     }
 
     onShow(boardInfo: BoardInfo) {
@@ -48,8 +51,9 @@ export class LayoutGame extends Component {
         this.nodeBoardGame.active = true;
         this.dataBoard.createBoard(boardConfig.data);
         console.log(this.dataBoard);
-        this.toucher.updateDataBoard(this.dataBoard);
+
         this.createUICell();
+        this.toucher.updateDataBoard(this.cells);
         this.addToHistory();
     }
 
@@ -69,6 +73,7 @@ export class LayoutGame extends Component {
         const padding: number = 3;
         const boardWidth = this.nodeBoardGame.getComponent(UITransform).width;
         const cellSize = boardWidth / board.length;
+
         const posStart: Vec2 = new Vec2(-boardWidth / 2 + cellSize / 2, boardWidth / 2 - cellSize / 2);
         for (let i = 0; i < board.length; i++) {
             const row = board[i];
@@ -86,6 +91,7 @@ export class LayoutGame extends Component {
             }
             this.cells.push(uiRow);
         }
+        this.toucher.updateSizeImgTarget(cellSize);
     }
 
     getCell(coords: Tcoords): UICell {
@@ -167,9 +173,6 @@ export class LayoutGame extends Component {
         if (this.dataBoard.isWin()) {
             this.nodeBoardGame.active = false;
         }
-    }
-
-    onHoverCell(coords: Tcoords) {
     }
 
     onLeftClick(coords: Tcoords) {

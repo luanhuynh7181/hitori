@@ -6,16 +6,24 @@ export class BoardMouse {
     private lastMove: Tcoords = { row: -1, column: -1 };
     constructor(
         private node: Node,
-        private dataBoard: DataBoard,
-        private onHoverCell: (coords: Tcoords) => void,
+        private dataBoard: UICell[][],
+        private imgTarget: Node,
         private onLeftClick: (coords: Tcoords) => void,
         private onRightClick: (coords: Tcoords) => void) {
+        node.on(Node.EventType.MOUSE_ENTER, this.onMouseEnter, this);
         node.on(Node.EventType.MOUSE_MOVE, this.onMouseMove, this);
         node.on(Node.EventType.MOUSE_DOWN, this.onMouseDown, this);
+        node.on(Node.EventType.MOUSE_LEAVE, this.onMouseLeave, this);
     }
 
-    public updateDataBoard(dataBoard: DataBoard) {
+    public updateDataBoard(dataBoard: UICell[][]) {
         this.dataBoard = dataBoard;
+    }
+
+    public updateSizeImgTarget(size: number) {
+        this.imgTarget.getComponent(UITransform).width = size;
+        this.imgTarget.getComponent(UITransform).height = size;
+        this.imgTarget.setSiblingIndex(1000);
     }
 
     addTouchListener(node: Node) {
@@ -28,8 +36,8 @@ export class BoardMouse {
         const touch = event.getUILocation();
         const pos = this.node.getComponent(UITransform).convertToNodeSpaceAR(v3(touch.x, touch.y, 0));
         const boardWidth = this.node.getComponent(UITransform).width;
-        const sizeBoard = this.dataBoard.board.length
-        const cellSize = boardWidth / this.dataBoard.board.length;
+        const sizeBoard = this.dataBoard.length
+        const cellSize = boardWidth / this.dataBoard.length;
         let column = Math.floor((pos.x + boardWidth / 2) / cellSize);
         column = clamp(column, 0, sizeBoard - 1);
         let row = Math.floor((-pos.y + boardWidth / 2) / cellSize);
@@ -44,7 +52,7 @@ export class BoardMouse {
             return;
         }
         this.lastMove = coords;
-        this.onHoverCell(coords);
+        this.imgTarget.setPosition(this.dataBoard[coords.row][coords.column].node.getPosition());
     }
 
     onMouseDown(event: EventMouse) {
@@ -70,5 +78,13 @@ export class BoardMouse {
     }
 
     onTouchEnd(event: EventTouch) {
+    }
+
+    onMouseLeave() {
+        this.imgTarget.active = false;
+    }
+
+    onMouseEnter() {
+        this.imgTarget.active = true;
     }
 }
