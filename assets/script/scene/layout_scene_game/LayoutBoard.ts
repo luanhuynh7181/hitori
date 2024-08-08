@@ -7,7 +7,6 @@ const { ccclass, property } = _decorator;
 @ccclass('LayoutBoard')
 export class LayoutBoard extends Component {
 
-    @property(SceneGame) sceneGame: SceneGame;
     @property(PageView) pv: PageView = null;
 
     changePage(event: EventTouch, change: string) {

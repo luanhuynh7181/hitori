@@ -13,7 +13,7 @@ export class SceneGame extends Component {
 
     start() {
         console.log("SceneGame start");
-        this.setVisibleLobby()
+        // this.setVisibleLobby()
     }
 
     setVisibleLobby(data?: any) {
