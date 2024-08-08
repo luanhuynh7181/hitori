@@ -9,7 +9,6 @@ import { ChangeTypeCommand } from '../design/history/ChangeTypeCommand';
 import { ChangeTypeHistory } from '../design/history/ChangeTypeHistory';
 import { CELL_TYPE } from '../Enum';
 import { Utility } from '../Utility';
-import DataChangeScene from '../data/DataChangeScene';
 import BoardConfig from '../board/BoardConfig';
 import DataConfig from '../board/DataConfig';
 const { ccclass, property } = _decorator;
@@ -25,17 +24,17 @@ export class BoardGame extends Component {
     private changeTypeCommand: ChangeTypeHistory = new ChangeTypeHistory();
 
     start() {
-        const boardInfo: BoardInfo = DataChangeScene.boardInfo;
-        const boardConfig: BoardConfig = DataConfig.getBoardConfig(boardInfo);
-        this.dataBoard.createBoard(boardConfig.data);
-        this.createUICell();
-        this.toucher = new BoardMouse(
-            this.node,
-            this.dataBoard,
-            this.onHoverCell.bind(this),
-            this.onLeftClick.bind(this),
-            this.onRightClick.bind(this));
-        this.addToHistory();
+        // const boardInfo: BoardInfo = { packType: 1, boardSize: 5, boardIndex: 0 };
+        // const boardConfig: BoardConfig = DataConfig.getBoardConfig(boardInfo);
+        // this.dataBoard.createBoard(boardConfig.data);
+        // this.createUICell();
+        // this.toucher = new BoardMouse(
+        //     this.node,
+        //     this.dataBoard,
+        //     this.onHoverCell.bind(this),
+        //     this.onLeftClick.bind(this),
+        //     this.onRightClick.bind(this));
+        // this.addToHistory();
     }
 
     createUICell() {

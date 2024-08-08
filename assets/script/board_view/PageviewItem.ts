@@ -1,6 +1,5 @@
 import { _decorator, Component, director, Label, Node } from 'cc';
 import { PACK_TYPE } from '../Constant';
-import DataChangeScene from '../data/DataChangeScene';
 const { ccclass, property } = _decorator;
 
 @ccclass('PageviewItem')
@@ -25,10 +24,7 @@ export class PageviewItem extends Component {
     }
 
     onClick() {
-        if (this.isLocked()) return;
-        DataChangeScene.boardInfo = { packType: this.packType, boardSize: this.boardSize, boardIndex: this.boardIndex };
-        console.log("PageviewItem onclick", DataChangeScene.boardInfo);
-        director.loadScene('SceneGame');
+
     }
 }
 

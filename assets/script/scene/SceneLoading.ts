@@ -1,4 +1,4 @@
-import { _decorator, Component, director, JsonAsset, Node, resources } from 'cc';
+import { _decorator, assetManager, Component, director, JsonAsset, Node, resources } from 'cc';
 import { PACK_TYPE } from '../Constant';
 import BoardConfig from '../board/BoardConfig';
 import PackConfig from '../board/PackConfig';
@@ -9,12 +9,11 @@ const { ccclass, property } = _decorator;
 export class SceneLoading extends Component {
     async start() {
         console.log("sceneLoading")
-        await this.loadBoard();
-        // await this.preloadSceneAsync('SceneChooseBoard');
-        director.loadScene("SceneLobby");
-    }
+        await this.loadConfig();
+        director.loadScene("SceneGame");
+    };
 
-    async loadBoard() {
+    async loadConfig() {
         const boardData = [
             { name: PACK_TYPE.CLASSIC, "path": "classic" },
             { name: PACK_TYPE.DAILY, "path": "daily" },
@@ -62,18 +61,6 @@ export class SceneLoading extends Component {
                     reject(err);
                 } else {
                     resolve(jsonAsset);
-                }
-            });
-        });
-    }
-
-    preloadSceneAsync(sceneName: string) {
-        return new Promise<void>((resolve, reject) => {
-            director.preloadScene(sceneName, (error) => {
-                if (error) {
-                    reject(error);
-                } else {
-                    resolve();
                 }
             });
         });

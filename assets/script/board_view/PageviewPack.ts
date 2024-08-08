@@ -17,7 +17,7 @@ export class PageviewPack extends Component {
     @property(Node) btnNext: Node = null;
     @property(Node) btnPrev: Node = null;
     private dot: Node[] = [];
-    start() {
+    onLoad() {
 
         this.packName.string = PACK_TYPE[this.packType];
         const packConfig: PackConfig = DataConfig.getPackConfig(this.packType);
