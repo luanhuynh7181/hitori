@@ -38,8 +38,8 @@ export class SceneGame extends Component {
     showLayout(layout: LayoutBoard | LayoutLobby | LayoutGame, data?: any) {
         function setVisible(_layout: LayoutBoard | LayoutLobby | LayoutGame) {
             if (_layout === layout) {
-                _layout.onShow(data);
                 _layout.node.active = true;
+                _layout.onShow(data);
             } else {
                 _layout.node.active = false;
             }
