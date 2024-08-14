@@ -1,4 +1,4 @@
-import { _decorator, clamp, Component, director, EventTouch, instantiate, Node, Prefab, UI, UITransform, v3, Vec2 } from 'cc';
+import { _decorator, clamp, Component, director, EventTouch, instantiate, Label, Node, Prefab, UI, UITransform, v3, Vec2 } from 'cc';
 import { DataBoard } from '../../data/DataBoard';
 import { BoardMouse } from '../../ui/BoardMouse';
 import { UICell } from '../../ui/ui_cell/UICell';
@@ -21,9 +21,9 @@ export class LayoutGame extends Component {
     @property(Node) nodeBoardGame: Node = null;
     @property(Node) nodeBg: Node = null;
     @property(Node) imgTarget: Node = null;
-    @property(Node) btnBack: Node = null;
     @property(Node) btnUndo: Node = null;
     @property(Node) btnNext: Node = null;
+    @property(Node) btnHelp: Node = null;
 
     private poolUIcell: Node[] = [];
 
@@ -51,7 +51,6 @@ export class LayoutGame extends Component {
         this.nodeBoardGame.active = true;
         this.dataBoard.createBoard(boardConfig.data);
         this.createUICell();
-        this.toucher.updateDataBoard(this.cells);
         this.addToHistory();
     }
 
@@ -111,7 +110,7 @@ export class LayoutGame extends Component {
             }
             this.cells.push(uiRow);
         }
-        this.toucher.updateSizeImgTarget(cellSize);
+        this.toucher.setup(this.cells, cellSize);
     }
 
     getCell(coords: Tcoords): UICell {
@@ -226,4 +225,6 @@ export class LayoutGame extends Component {
         director.emit(EVENT_TYPE.SWITCH_LAYOUT, { layout: GAME_LAYOUT.LOBBY, data: null });
     }
 
+    onClickHelp() {
+    }
 }

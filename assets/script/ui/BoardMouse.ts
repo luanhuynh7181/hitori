@@ -16,14 +16,12 @@ export class BoardMouse {
         node.on(Node.EventType.MOUSE_LEAVE, this.onMouseLeave, this);
     }
 
-    public updateDataBoard(dataBoard: UICell[][]) {
+    public setup(dataBoard: UICell[][], imgSize: number) {
         this.dataBoard = dataBoard;
-    }
-
-    public updateSizeImgTarget(size: number) {
-        this.imgTarget.getComponent(UITransform).width = size;
-        this.imgTarget.getComponent(UITransform).height = size;
+        this.imgTarget.getComponent(UITransform).width = imgSize;
+        this.imgTarget.getComponent(UITransform).height = imgSize;
         this.imgTarget.setSiblingIndex(1000);
+
     }
 
     addTouchListener(node: Node) {

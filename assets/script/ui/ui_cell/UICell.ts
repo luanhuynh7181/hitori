@@ -3,8 +3,7 @@ import { IDataCell } from '../../data/DataCell';
 import { UICellActionManager } from './UICellActionManager';
 import { UICellFlag, UICellInvalidArea, UICellInvalidCoord, UICellShaded, UICellUnshade } from './UICellType';
 import { CELL_TYPE } from '../../Enum';
-import { Signal } from '../../design/Signal';
-import { SignalChangeType, TCellPriority, TCellPriorityInit, Tcoords } from '../../Type';
+import { TCellPriority, TCellPriorityInit, Tcoords } from '../../Type';
 
 const { ccclass, property } = _decorator;
 

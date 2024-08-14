@@ -28,6 +28,7 @@ export class PageviewPack extends Component {
             pvBoard.setup(this.packType, size, boardConfig);
             pv.addPage(node);
         }
+        pv.node.on(PageView.EventType.SCROLL_ENDED, this.onScrollEnded, this);
         this.createDot();
     }
     createDot() {
@@ -59,12 +60,17 @@ export class PageviewPack extends Component {
         this.onChangePage(parseInt(customEventData));
     }
 
+    updateCurPage(pageIndex: number) {
+        this.curPage.setPosition(this.dot[pageIndex].getPosition());
+    }
+
     onChangePage(pageIndex: number, time: number = 0.5) {
         const pv: PageView = this.node.getComponent(PageView);
         const pageCount = pv.getPages().length;
         pageIndex = (pageIndex + pageCount) % pageCount;
         pv.scrollToPage(pageIndex, time);
-        this.curPage.setPosition(this.dot[pageIndex].getPosition());
+        this.updateCurPage(pageIndex);
+
     }
 
     onClickNext() {
@@ -75,6 +81,11 @@ export class PageviewPack extends Component {
     onClickPrev() {
         const pv: PageView = this.node.getComponent(PageView);
         this.onChangePage(pv.getCurrentPageIndex() - 1);
+    }
+
+    onScrollEnded() {
+        const pv: PageView = this.node.getComponent(PageView);
+        this.updateCurPage(pv.getCurrentPageIndex());
     }
 }
 
