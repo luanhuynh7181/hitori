@@ -1,7 +1,6 @@
 import { _decorator, Component, director, Label, Node } from 'cc';
-import { PACK_TYPE } from '../Constant';
 import { SceneGame } from '../scene/SceneGame';
-import { EVENT_TYPE, GAME_LAYOUT } from '../Enum';
+import { EVENT_TYPE, GAME_LAYOUT, PACK_TYPE } from '../Enum';
 import { BoardInfo } from '../Type';
 const { ccclass, property } = _decorator;
 

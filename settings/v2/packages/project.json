@@ -4,9 +4,9 @@
   "general": {
     "designResolution": {
       "fitHeight": true,
-      "fitWidth": true,
-      "width": 1920,
-      "height": 1080
+      "fitWidth": false,
+      "width": 1128,
+      "height": 615
     }
   }
 }

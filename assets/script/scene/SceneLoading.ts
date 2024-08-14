@@ -1,8 +1,8 @@
 import { _decorator, assetManager, Component, director, JsonAsset, Node, resources } from 'cc';
-import { PACK_TYPE } from '../Constant';
 import BoardConfig from '../board/BoardConfig';
 import PackConfig from '../board/PackConfig';
 import DataConfig from '../board/DataConfig';
+import { PACK_TYPE } from '../Enum';
 const { ccclass, property } = _decorator;
 
 @ccclass('SceneLoading')

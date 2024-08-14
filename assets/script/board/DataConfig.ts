@@ -1,4 +1,4 @@
-import { PACK_TYPE } from "../Constant";
+import { PACK_TYPE } from "../Enum";
 import { BoardInfo } from "../Type";
 import BoardConfig from "./BoardConfig";
 import PackConfig from "./PackConfig";

@@ -18,15 +18,17 @@ export class UICell extends Component {
     private uiCellAction: UICellActionManager = null;
     private _coords: Tcoords = null;
     private _type: CELL_TYPE = null;
-    private _priority: TCellPriority = { ...TCellPriorityInit };
+    private _priority: TCellPriority = null;
     setup(coords: Tcoords, dataCell: IDataCell) {
         this._dataCell = dataCell;
-        this._coords = coords;
-        this.lbNumber.string = dataCell.value.toString();
-
         this.uiCellAction = new UICellActionManager(this);
-        this.uiCellAction.doAction(UICellUnshade);
+        this._coords = coords;
         this._type = CELL_TYPE.NONE_SHADE;
+        this._priority = { ...TCellPriorityInit };
+
+        this.lbNumber.string = dataCell.value.toString();
+        this.uiCellAction.doAction(UICellUnshade);
+
     }
 
     public get coords(): Tcoords {

@@ -1,4 +1,3 @@
-import { PACK_TYPE } from "../Constant";
 import BoardConfig from "./BoardConfig";
 
 

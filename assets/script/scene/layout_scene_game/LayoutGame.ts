@@ -21,6 +21,11 @@ export class LayoutGame extends Component {
     @property(Node) nodeBoardGame: Node = null;
     @property(Node) nodeBg: Node = null;
     @property(Node) imgTarget: Node = null;
+    @property(Node) btnBack: Node = null;
+    @property(Node) btnUndo: Node = null;
+    @property(Node) btnNext: Node = null;
+
+    private poolUIcell: Node[] = [];
 
     private dataBoard: DataBoard = new DataBoard();
     private toucher: BoardMouse = null;
@@ -35,33 +40,46 @@ export class LayoutGame extends Component {
             this.onLeftClick.bind(this),
             this.onRightClick.bind(this)
         );
+
+        this.preloadUICell();
     }
 
     onShow(boardInfo: BoardInfo) {
         this.clear()
         const boardConfig: BoardConfig = DataConfig.getBoardConfig(boardInfo);
-        const max = 900;
-        const min = 500;
-        const width = (max - min) / 16 * boardConfig.data.length + min;
-        this.nodeBoardGame.getComponent(UITransform).width = width;
-        this.nodeBoardGame.getComponent(UITransform).height = width;
-
-        this.nodeBg.getComponent(UITransform).width = width + 20;
-        this.nodeBg.getComponent(UITransform).height = width + 30;
+        this.updateLayoutBoard(boardConfig.data.length);
         this.nodeBoardGame.active = true;
         this.dataBoard.createBoard(boardConfig.data);
-        console.log(this.dataBoard);
-
         this.createUICell();
         this.toucher.updateDataBoard(this.cells);
         this.addToHistory();
     }
 
+    preloadUICell() {
+        for (let i = 0; i < 400; i++) {
+            const node: Node = instantiate(this.cellPrefab);
+            node.active = false;
+            this.nodeBoardGame.addChild(node);
+            this.poolUIcell.push(node);
+        }
+    }
+
+    updateLayoutBoard(size: number) {
+        const max = 450;
+        const min = 300;
+        const width = (max - min) / 16 * size + min;
+        this.nodeBoardGame.getComponent(UITransform).width = width;
+        this.nodeBoardGame.getComponent(UITransform).height = width;
+        this.nodeBg.getComponent(UITransform).width = width + 15;
+        this.nodeBg.getComponent(UITransform).height = width + 15;
+        this.btnNext.setPosition(-80, -width / 2 - 65);
+        this.btnUndo.setPosition(80, -width / 2 - 65);
+    }
+
     clear() {
-        for (const row of this.cells) {
-            for (const cell of row) {
-                cell.node.destroy();
-            }
+
+        for (const node of this.poolUIcell) {
+            node.active = false;
         }
         this.cells = [];
         this.changeTypeCommand = new ChangeTypeHistory();
@@ -75,17 +93,18 @@ export class LayoutGame extends Component {
         const cellSize = boardWidth / board.length;
 
         const posStart: Vec2 = new Vec2(-boardWidth / 2 + cellSize / 2, boardWidth / 2 - cellSize / 2);
+        let uiCellIndex = 0;
         for (let i = 0; i < board.length; i++) {
             const row = board[i];
             const uiRow: UICell[] = [];
             for (let j = 0; j < row.length; j++) {
                 const cell = row[j];
-                const node: Node = instantiate(this.cellPrefab);
+                const node: Node = this.poolUIcell[uiCellIndex++];
+                node.active = true
                 const uiCell: UICell = node.getComponent(UICell);
                 const coords: Tcoords = { row: i, column: j };
                 uiCell.setup(coords, cell);
                 uiRow.push(uiCell);
-                this.nodeBoardGame.addChild(uiCell.node);
                 node.setPosition(posStart.x + j * cellSize, posStart.y - i * cellSize);
                 uiCell.updateSize(cellSize - padding);
             }

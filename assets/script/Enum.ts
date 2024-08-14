@@ -17,3 +17,9 @@ export const enum GAME_LAYOUT {
 export const enum EVENT_TYPE {
     SWITCH_LAYOUT = 1,
 }
+
+export enum PACK_TYPE {
+    CLASSIC = 0,
+    DAILY = 1,
+    CUSTOM = 2
+}

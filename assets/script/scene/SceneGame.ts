@@ -17,36 +17,24 @@ export class SceneGame extends Component {
         director.on(EVENT_TYPE.SWITCH_LAYOUT, this.setVisibleLayout, this);
     }
 
-    test() {
-
-    }
-
     setVisibleLayout(data: { layout: GAME_LAYOUT, data?: any }) {
+        this.layoutLobby.node.active = false;
+        this.layoutBoard.node.active = false;
+        this.layoutGame.node.active = false;
         switch (data.layout) {
             case GAME_LAYOUT.LOBBY:
-                this.showLayout(this.layoutLobby, data.data);
+                this.layoutLobby.node.active = true;
+                this.layoutLobby.onShow(data.data);
                 break;
             case GAME_LAYOUT.BOARD:
-                this.showLayout(this.layoutBoard, data.data);
+                this.layoutBoard.node.active = true;
+                this.layoutBoard.onShow(data.data);
                 break;
             case GAME_LAYOUT.GAME:
-                this.showLayout(this.layoutGame, data.data);
+                this.layoutGame.node.active = true;
+                this.layoutGame.onShow(data.data);
                 break;
         }
-    }
-
-    showLayout(layout: LayoutBoard | LayoutLobby | LayoutGame, data?: any) {
-        function setVisible(_layout: LayoutBoard | LayoutLobby | LayoutGame) {
-            if (_layout === layout) {
-                _layout.node.active = true;
-                _layout.onShow(data);
-            } else {
-                _layout.node.active = false;
-            }
-        }
-        setVisible(this.layoutBoard);
-        setVisible(this.layoutLobby);
-        setVisible(this.layoutGame);
     }
 }
 

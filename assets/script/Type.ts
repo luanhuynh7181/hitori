@@ -1,5 +1,4 @@
-import { PACK_TYPE } from "./Constant";
-import { CELL_TYPE } from "./Enum";
+import { CELL_TYPE, PACK_TYPE } from "./Enum";
 
 // create type for board with row column
 export type Tcoords = {

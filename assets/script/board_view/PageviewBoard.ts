@@ -1,7 +1,7 @@
 import { _decorator, Component, instantiate, Label, Node, Prefab } from 'cc';
-import { PACK_TYPE } from '../Constant';
 import BoardConfig from '../board/BoardConfig';
 import { PageviewItem } from './PageviewItem';
+import { PACK_TYPE } from '../Enum';
 const { ccclass, property } = _decorator;
 
 @ccclass('PageviewBoard')
@@ -29,13 +29,14 @@ export class PageviewBoard extends Component {
 
     addItems() {
         const maxRow = 5;
-        const height = 180;
-        const width = 180;
+        const height = 130;
+        const width = 130;
+        const yStart = 50;
         for (let i = 0; i < this.boards.length; i++) {
             const node: Node = instantiate(this.pvItem);
             const pvItem = node.getComponent(PageviewItem);
             pvItem.setup(this.packType, this.size, i);
-            node.setPosition(((i % maxRow) - (maxRow - 1) / 2) * width, -Math.floor(i / maxRow) * height);
+            node.setPosition(((i % maxRow) - (maxRow - 1) / 2) * width, yStart - Math.floor(i / maxRow) * height);
             this.node.addChild(node);
         }
     }

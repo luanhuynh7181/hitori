@@ -1,9 +1,9 @@
 import { _decorator, Button, CCInteger, Color, Component, EventHandler, ImageAsset, instantiate, Label, Layout, Node, PageView, Prefab, Sprite, SpriteFrame, Texture2D, UITransform } from 'cc';
-import { PACK_TYPE } from '../Constant';
 import DataConfig from '../board/DataConfig';
 import PackConfig from '../board/PackConfig';
 import { PageviewBoard } from './PageviewBoard';
 import BoardConfig from '../board/BoardConfig';
+import { PACK_TYPE } from '../Enum';
 const { ccclass, property } = _decorator;
 
 @ccclass('PageviewPack')
@@ -11,14 +11,12 @@ export class PageviewPack extends Component {
     @property(Node) nodeContent: Node = null;
     @property(Prefab) pvBoard: Prefab = null;
     @property(CCInteger) packType: PACK_TYPE = 0;
-    @property(Label) packName: Label = null;
     @property(Node) curPage: Node = null;
     @property(Prefab) pageDot: Prefab = null;
     @property(Node) btnNext: Node = null;
     @property(Node) btnPrev: Node = null;
     private dot: Node[] = [];
     onLoad() {
-        this.packName.string = PACK_TYPE[this.packType];
         const packConfig: PackConfig = DataConfig.getPackConfig(this.packType);
         const allBoardSize = packConfig.getBoardConfigSortedBySize();
         this.nodeContent.getComponent(Layout).updateLayout();
@@ -35,8 +33,8 @@ export class PageviewPack extends Component {
     createDot() {
         const pv: PageView = this.node.getComponent(PageView);
         const pageCount = pv.getPages().length;
-        const width = 80;
-        const y = 260;
+        const width = 60;
+        const y = this.btnNext.getPosition().y;
 
         for (let i = 0; i < pageCount; i++) {
             const dotNode: Node = instantiate(this.pageDot);
@@ -63,10 +61,10 @@ export class PageviewPack extends Component {
 
     onChangePage(pageIndex: number, time: number = 0.5) {
         const pv: PageView = this.node.getComponent(PageView);
+        const pageCount = pv.getPages().length;
+        pageIndex = (pageIndex + pageCount) % pageCount;
         pv.scrollToPage(pageIndex, time);
         this.curPage.setPosition(this.dot[pageIndex].getPosition());
-        this.btnNext.active = pageIndex < this.dot.length - 1;
-        this.btnPrev.active = pageIndex > 0;
     }
 
     onClickNext() {
