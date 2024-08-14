@@ -67,13 +67,15 @@ export class LayoutGame extends Component {
     updateLayoutBoard(size: number) {
         const max = 450;
         const min = 300;
-        const width = (max - min) / 16 * size + min;
+        const minSize = 4;
+        const maxSize = 20
+        const width = (max - min) / (maxSize - minSize) * (size - minSize) + min;
         this.nodeBoardGame.getComponent(UITransform).width = width;
         this.nodeBoardGame.getComponent(UITransform).height = width;
         this.nodeBg.getComponent(UITransform).width = width + 15;
         this.nodeBg.getComponent(UITransform).height = width + 15;
-        this.btnNext.setPosition(-80, -width / 2 - 65);
-        this.btnUndo.setPosition(80, -width / 2 - 65);
+        this.btnNext.setPosition(80, -width / 2 - 45);
+        this.btnUndo.setPosition(-80, -width / 2 - 45);
     }
 
     clear() {
@@ -91,7 +93,6 @@ export class LayoutGame extends Component {
         const padding: number = 3;
         const boardWidth = this.nodeBoardGame.getComponent(UITransform).width;
         const cellSize = boardWidth / board.length;
-
         const posStart: Vec2 = new Vec2(-boardWidth / 2 + cellSize / 2, boardWidth / 2 - cellSize / 2);
         let uiCellIndex = 0;
         for (let i = 0; i < board.length; i++) {

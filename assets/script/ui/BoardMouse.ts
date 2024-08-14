@@ -39,15 +39,17 @@ export class BoardMouse {
         const sizeBoard = this.dataBoard.length
         const cellSize = boardWidth / this.dataBoard.length;
         let column = Math.floor((pos.x + boardWidth / 2) / cellSize);
-        column = clamp(column, 0, sizeBoard - 1);
         let row = Math.floor((-pos.y + boardWidth / 2) / cellSize);
-        row = clamp(row, 0, sizeBoard - 1);
+        if (column < 0 || column >= sizeBoard || row < 0 || row >= sizeBoard) {
+            return null;
+        }
         return { row, column };
     }
 
 
     onMouseMove(event: EventMouse) {
         const coords = this.getCellOnTouch(event);
+        if (!coords) return;
         if (this.lastMove.row === coords.row && this.lastMove.column === coords.column) {
             return;
         }
@@ -57,6 +59,7 @@ export class BoardMouse {
 
     onMouseDown(event: EventMouse) {
         const coords = this.getCellOnTouch(event);
+        if (!coords) return;
         switch (event.getButton()) {
             case EventMouse.BUTTON_LEFT:
                 this.onLeftClick(coords);

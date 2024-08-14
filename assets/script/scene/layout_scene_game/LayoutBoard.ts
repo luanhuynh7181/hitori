@@ -8,7 +8,6 @@ const { ccclass, property } = _decorator;
 export class LayoutBoard extends Component {
     @property(Node) packView: Node = null;
     start() {
-        this.node
     }
     onShow(packType: PACK_TYPE) {
 
