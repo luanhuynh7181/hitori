@@ -78,6 +78,11 @@ export class UICell extends Component {
         this.uiCellAction.doAction(UICellUnshade);
     }
 
+    showCellValidNumber() {
+        const hex = Color.fromHEX(new Color(), "#FF0000");
+        this.lbNumber.color = hex;
+    }
+
     public updateColor(color: string) {
         const hex = Color.fromHEX(new Color(), color);
         this.imgBg.getComponent(Sprite).color = hex;

@@ -23,15 +23,12 @@ export class SceneGame extends Component {
         this.layoutGame.node.active = false;
         switch (data.layout) {
             case GAME_LAYOUT.LOBBY:
-                this.layoutLobby.node.active = true;
                 this.layoutLobby.onShow(data.data);
                 break;
             case GAME_LAYOUT.BOARD:
-                this.layoutBoard.node.active = true;
                 this.layoutBoard.onShow(data.data);
                 break;
             case GAME_LAYOUT.GAME:
-                this.layoutGame.node.active = true;
                 this.layoutGame.onShow(data.data);
                 break;
         }

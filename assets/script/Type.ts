@@ -1,5 +1,5 @@
 import { CELL_TYPE, PACK_TYPE } from "./Enum";
-
+import { Node } from 'cc';
 // create type for board with row column
 export type Tcoords = {
     row: number;
@@ -32,4 +32,12 @@ export type BoardInfo = {
     packType: PACK_TYPE
     boardSize: number
     boardIndex: number
+}
+
+export type TTransitionInfo = {
+    node: Node,
+    duration: number,
+    delay: number,
+    deltaX: number,
+    deltaY: number,
 }

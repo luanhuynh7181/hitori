@@ -11,6 +11,7 @@ import { Utility } from '../../Utility';
 import BoardConfig from '../../board/BoardConfig';
 import DataConfig from '../../board/DataConfig';
 import { EVENT_TYPE, GAME_LAYOUT } from '../../Enum';
+import { Transition } from '../../effect/Transition';
 
 const { ccclass, property } = _decorator;
 
@@ -24,6 +25,8 @@ export class LayoutGame extends Component {
     @property(Node) btnUndo: Node = null;
     @property(Node) btnNext: Node = null;
     @property(Node) btnHelp: Node = null;
+    @property(Node) nodeTop: Node = null;
+    @property(Node) nodeInfo: Node = null;
 
     private poolUIcell: Node[] = [];
 
@@ -31,6 +34,7 @@ export class LayoutGame extends Component {
     private toucher: BoardMouse = null;
     private cells: UICell[][] = [];
     private changeTypeCommand: ChangeTypeHistory = new ChangeTypeHistory();
+    private transition: Transition = new Transition();
 
     onLoad() {
         this.toucher = new BoardMouse(
@@ -42,13 +46,22 @@ export class LayoutGame extends Component {
         );
 
         this.preloadUICell();
+        this.addTransition();
+    }
+
+    addTransition() {
+        this.transition.addTransition(this.nodeTop, 0, 100)
+            .addTransition(this.nodeInfo, -100)
+            .addTransition(this.nodeBg, 0, 100)
+            .addTransition(this.nodeBoardGame, 0, 100)
     }
 
     onShow(boardInfo: BoardInfo) {
-        this.clear()
+        this.node.active = true;
+        this.clearDataAndUI();
+        this.transition.runIn();
         const boardConfig: BoardConfig = DataConfig.getBoardConfig(boardInfo);
         this.updateLayoutBoard(boardConfig.data.length);
-        this.nodeBoardGame.active = true;
         this.dataBoard.createBoard(boardConfig.data);
         this.createUICell();
         this.addToHistory();
@@ -77,8 +90,7 @@ export class LayoutGame extends Component {
         this.btnUndo.setPosition(-80, -width / 2 - 45);
     }
 
-    clear() {
-
+    clearDataAndUI() {
         for (const node of this.poolUIcell) {
             node.active = false;
         }
@@ -100,7 +112,7 @@ export class LayoutGame extends Component {
             for (let j = 0; j < row.length; j++) {
                 const cell = row[j];
                 const node: Node = this.poolUIcell[uiCellIndex++];
-                node.active = true
+                node.active = true;
                 const uiCell: UICell = node.getComponent(UICell);
                 const coords: Tcoords = { row: i, column: j };
                 uiCell.setup(coords, cell);
@@ -222,9 +234,17 @@ export class LayoutGame extends Component {
     }
 
     onClickBack() {
-        director.emit(EVENT_TYPE.SWITCH_LAYOUT, { layout: GAME_LAYOUT.LOBBY, data: null });
+        this.transition.runOut(() => {
+            director.emit(EVENT_TYPE.SWITCH_LAYOUT, { layout: GAME_LAYOUT.LOBBY, data: null });
+        });
+
     }
 
     onClickHelp() {
+        const invalidCoords = this.dataBoard.getCoordsInvald();
+        for (const coords of invalidCoords) {
+            const cell: UICell = this.getCell(coords);
+            cell.showCellValidNumber();
+        }
     }
 }

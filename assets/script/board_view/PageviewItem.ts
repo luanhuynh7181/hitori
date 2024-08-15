@@ -22,7 +22,7 @@ export class PageviewItem extends Component {
     }
 
     onClick() {
-        director.emit(EVENT_TYPE.SWITCH_LAYOUT, { layout: GAME_LAYOUT.GAME, data: this.boardInfo });
+        director.emit(EVENT_TYPE.ONCLICK_ITEM_BOARD, { layout: GAME_LAYOUT.GAME, data: this.boardInfo });
     }
 }
 

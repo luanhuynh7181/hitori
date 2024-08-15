@@ -75,25 +75,36 @@ export class DataBoard {
         return result;
     }
 
-    // getInvaldNumber(): Tcoords[] {
-    //     const res: Tcoords[] = [];
-    //     const mapRow = new Map<number, Map<number, Tcoords[]>>();
-    //     const mapCol = new Map<string, boolean>();
-    //     for (let i = 0; i < this.board.length; i++) {
-    //         for (let j = 0; j < this.board[i].length; j++) {
-    //             const value = this.board[i][j].value;
-    //             const row = i;
-    //             if (!mapRow.has(row)) {
-    //                 mapRow.set(row, new Map<number, Tcoords[]>());
-    //             }
-    //             if (!mapRow.get(row).has(value)) {
-    //                 mapRow.get(row).set(value, []);
-    //             }
-    //             mapRow.get(row).get(value).push({ row: i, column: j });
-    //         }
-    //     }
-    //     return res;
-    // }
+    getCoordsInvald(): Tcoords[] {
+        const res: Tcoords[] = [];
+        const mapRow = new Map<string, Tcoords[]>();
+        const mapCol = new Map<string, Tcoords[]>();
+        for (let i = 0; i < this.board.length; i++) {
+            for (let j = 0; j < this.board[i].length; j++) {
+                const value = this.board[i][j].value;
+                const hashRow = `${i}_${value}`;
+                if(!mapRow.has(hashRow)) {
+                    mapRow.set(hashRow, []);
+                }
+                mapRow.get(hashRow).push({row: i, column: j});
+                const hashCol = `${j}_${value}`;
+                if(!mapCol.has(hashCol)) {
+                    mapCol.set(hashCol, []);
+                }
+                mapCol.get(hashCol).push({row: i, column: j});
+            }
+        }
+
+        for (let i = 0; i < this.board.length; i++) {
+            for (let j = 0; j < this.board[i].length; j++) {
+                const value = this.board[i][j].value;
+                if(mapRow.get(`${i}_${value}`).length > 1 || mapCol.get(`${j}_${value}`).length > 1) {
+                    res.push({row: i, column: j});
+                }
+            }
+        }
+        return res;
+    }
 
     isValidNumber(): boolean {
         const map = new Map<string, boolean>();

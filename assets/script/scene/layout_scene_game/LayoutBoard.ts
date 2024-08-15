@@ -1,20 +1,37 @@
 import { _decorator, AssetManager, clamp, Component, director, EventTouch, Node, PageView } from 'cc';
 import { SceneGame } from '../SceneGame';
 import { EVENT_TYPE, GAME_LAYOUT, PACK_TYPE } from '../../Enum';
+import { Transition } from '../../effect/Transition';
 
 const { ccclass, property } = _decorator;
 
 @ccclass('LayoutBoard')
 export class LayoutBoard extends Component {
-    @property(Node) packView: Node = null;
-    start() {
-    }
-    onShow(packType: PACK_TYPE) {
+    @property(Node) packView: Node;
+    @property(Node) btnBack: Node;
+    private transition: Transition = new Transition();
 
+    onLoad() {
+        this.transition.addTransition(this.btnBack, -100);
+        this.transition.addTransition(this.packView, 0, 0);
+        director.on(EVENT_TYPE.ONCLICK_ITEM_BOARD, this.onClickItemBoard, this);
+    }
+
+    onShow(packType: PACK_TYPE) {
+        this.node.active = true;
+        this.transition.runIn();
+    }
+
+    onClickItemBoard(data: { layout: GAME_LAYOUT, data: any }) {
+        this.transition.runOut(() => {
+            director.emit(EVENT_TYPE.SWITCH_LAYOUT, { layout: GAME_LAYOUT.GAME, data: data.data });
+        });
     }
 
     onClickBack() {
-        director.emit(EVENT_TYPE.SWITCH_LAYOUT, { layout: GAME_LAYOUT.LOBBY });
+        this.transition.runOut(() => {
+            director.emit(EVENT_TYPE.SWITCH_LAYOUT, { layout: GAME_LAYOUT.LOBBY })
+        });
     }
 }
 
