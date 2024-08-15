@@ -10,9 +10,10 @@ import { ChangeTypeCommand } from '../../design/history/ChangeTypeCommand';
 import { Utility } from '../../Utility';
 import BoardConfig from '../../board/BoardConfig';
 import DataConfig from '../../board/DataConfig';
-import { EVENT_TYPE, GAME_LAYOUT } from '../../Enum';
+import { EVENT_TYPE, GAME_LAYOUT, PACK_TYPE } from '../../Enum';
 import { Transition } from '../../effect/Transition';
 import { LocalStorage } from '../../Storage';
+import { LayoutGameTut } from './LayoutGameTut';
 
 const { ccclass, property } = _decorator;
 
@@ -20,6 +21,7 @@ const { ccclass, property } = _decorator;
 export class LayoutGame extends Component {
 
     @property(Prefab) cellPrefab: Prefab = null;
+    @property(Prefab) popupTut: Prefab = null;
     @property(Node) nodeBoardGame: Node = null;
     @property(Node) nodeBg: Node = null;
     @property(Node) imgTarget: Node = null;
@@ -30,16 +32,17 @@ export class LayoutGame extends Component {
     @property(Node) nodeInfo: Node = null;
     @property(Node) popupWin: Node = null;
 
-    private poolUIcell: Node[] = [];
-
-    private dataBoard: DataBoard = new DataBoard();
-    private toucher: BoardMouse = null;
-    private cells: UICell[][] = [];
-    private changeTypeCommand: ChangeTypeHistory = new ChangeTypeHistory();
-    private transition: Transition = new Transition();
-    private boardInfo: BoardInfo = null;
+    poolUIcell: Node[] = [];
+    dataBoard: DataBoard = new DataBoard();
+    toucher: BoardMouse = null;
+    cells: UICell[][] = [];
+    changeTypeCommand: ChangeTypeHistory = new ChangeTypeHistory();
+    transition: Transition = new Transition();
+    boardInfo: BoardInfo = null;
+    nodeTut: Node = null;
 
     onLoad() {
+        console.log("onLoad");
         this.toucher = new BoardMouse(
             this.nodeBoardGame,
             this.cells,
@@ -71,9 +74,9 @@ export class LayoutGame extends Component {
         this.addToHistory();
     }
 
-    preloadUICell() {
+    preloadUICell(maxCell: number = 400) {
         const pos = new Vec3(2000, 200);
-        for (let i = 0; i < 400; i++) {
+        for (let i = 0; i < maxCell; i++) {
             const node: Node = instantiate(this.cellPrefab);
             this.nodeBoardGame.addChild(node);
             this.poolUIcell.push(node);
@@ -257,7 +260,15 @@ export class LayoutGame extends Component {
     }
 
     onClickTut() {
-
+        const node: Node = instantiate(this.node);
+        const layoutGame = node.getComponent(LayoutGame);
+        layoutGame.nodeTop.destroy();
+        layoutGame.btnNext.destroy();
+        layoutGame.btnUndo.destroy();
+        layoutGame.nodeInfo.destroy();
+        layoutGame.preloadUICell = layoutGame.preloadUICell.bind(layoutGame, 25);
+        this.node.parent.addChild(node);
+        const newLayout = new LayoutGameTut(node, this.node);
     }
 
 }

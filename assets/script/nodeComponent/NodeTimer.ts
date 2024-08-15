@@ -5,21 +5,21 @@ const { ccclass, property } = _decorator;
 export class NodeTimer extends Component {
     @property(Label) lbTime: Label = null;
     private time: number = 0;
-    private key: NodeJS.Timeout = null
     start() {
 
     }
 
     onEnable() {
         this.time = -1;
-        clearInterval(this.key);
-        console.log('onEnable');
-        this.key = setInterval(() => {
-            this.time++;
-            const minutes = Math.floor(this.time / 60);
-            const seconds = this.time % 60;
-            this.lbTime.string = `${minutes < 10 ? '0' + minutes : minutes}:${seconds < 10 ? '0' + seconds : seconds}`;
-        }, 1000);
+        this.unschedule(this.updateTime);
+        this.schedule(this.updateTime, 1);
+    }
+
+    updateTime() {
+        this.time++;
+        const minutes = Math.floor(this.time / 60);
+        const seconds = this.time % 60;
+        this.lbTime.string = `${minutes < 10 ? '0' + minutes : minutes}:${seconds < 10 ? '0' + seconds : seconds}`;
     }
 
 }

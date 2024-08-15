@@ -4484,6 +4484,10 @@
       "__uuid__": "de123a9c-2d0f-42b7-9d95-9f8d7f152f5e",
       "__expectedType__": "cc.Prefab"
     },
+    "popupTut": {
+      "__uuid__": "c572363a-9d1f-48a9-98cd-077851434512",
+      "__expectedType__": "cc.Prefab"
+    },
     "nodeBoardGame": {
       "__id__": 16
     },

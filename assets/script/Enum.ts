@@ -24,3 +24,12 @@ export enum PACK_TYPE {
     DAILY = 1,
     CUSTOM = 2
 }
+
+export enum TUT_STEP {
+    RULE_TARGET = 1,
+    INVALID_COORDS = 2,
+    INVALID_AREA = 3,
+    SHOW_MARKED = 4,
+    FINISH = 5,
+    PLAY = 6
+}
