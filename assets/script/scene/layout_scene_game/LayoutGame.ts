@@ -1,4 +1,4 @@
-import { _decorator, clamp, Component, director, EventTouch, instantiate, Label, Node, Prefab, UI, UITransform, v3, Vec2 } from 'cc';
+import { _decorator, clamp, Component, director, EventTouch, instantiate, Label, Node, Prefab, UI, UITransform, v3, Vec2, Vec3 } from 'cc';
 import { DataBoard } from '../../data/DataBoard';
 import { BoardMouse } from '../../ui/BoardMouse';
 import { UICell } from '../../ui/ui_cell/UICell';
@@ -68,11 +68,12 @@ export class LayoutGame extends Component {
     }
 
     preloadUICell() {
+        const pos = new Vec3(2000, 200);
         for (let i = 0; i < 400; i++) {
             const node: Node = instantiate(this.cellPrefab);
-            node.active = false;
             this.nodeBoardGame.addChild(node);
             this.poolUIcell.push(node);
+            node.setPosition(pos);
         }
     }
 
@@ -91,8 +92,10 @@ export class LayoutGame extends Component {
     }
 
     clearDataAndUI() {
-        for (const node of this.poolUIcell) {
-            node.active = false;
+        for (const row of this.cells) {
+            for (const cell of row) {
+                cell.node.setPosition(2000, 2000);
+            }
         }
         this.cells = [];
         this.changeTypeCommand = new ChangeTypeHistory();
@@ -112,7 +115,6 @@ export class LayoutGame extends Component {
             for (let j = 0; j < row.length; j++) {
                 const cell = row[j];
                 const node: Node = this.poolUIcell[uiCellIndex++];
-                node.active = true;
                 const uiCell: UICell = node.getComponent(UICell);
                 const coords: Tcoords = { row: i, column: j };
                 uiCell.setup(coords, cell);
@@ -201,9 +203,7 @@ export class LayoutGame extends Component {
     }
 
     checkWin() {
-        if (this.dataBoard.isWin()) {
-            this.nodeBoardGame.active = false;
-        }
+
     }
 
     onLeftClick(coords: Tcoords) {
@@ -241,6 +241,19 @@ export class LayoutGame extends Component {
     }
 
     onClickHelp() {
+        const arrRandom = [18, 20];
+        const random = arrRandom[Math.floor(Math.random() * arrRandom.length)];
+        const boardInfo: BoardInfo = { packType: 0, boardSize: random, boardIndex: 0 };
+        this.node.active = true;
+        this.clearDataAndUI();
+        this.transition.runIn();
+        const boardConfig: BoardConfig = DataConfig.getBoardConfig(boardInfo);
+        this.updateLayoutBoard(boardConfig.data.length);
+        this.dataBoard.createBoard(boardConfig.data);
+        this.createUICell();
+        this.addToHistory();
+        return
+
         const invalidCoords = this.dataBoard.getCoordsInvald();
         for (const coords of invalidCoords) {
             const cell: UICell = this.getCell(coords);
