@@ -15,6 +15,9 @@ export class PageviewBoard extends Component {
     start() {
     }
 
+    onEnable() {
+    }
+
     setup(packType: PACK_TYPE, size: number, boards: BoardConfig[]) {
         this.packType = packType;
         this.size = size;

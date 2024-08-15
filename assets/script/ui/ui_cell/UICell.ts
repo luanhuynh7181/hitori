@@ -27,6 +27,7 @@ export class UICell extends Component {
 
         this.lbNumber.string = dataCell.value.toString();
         this.uiCellAction.doAction(UICellUnshade);
+        this.resetColor();
 
     }
 
@@ -80,6 +81,11 @@ export class UICell extends Component {
 
     showCellValidNumber() {
         const hex = Color.fromHEX(new Color(), "#FF0000");
+        this.lbNumber.color = hex;
+    }
+
+    resetColor() {
+        const hex = Color.fromHEX(new Color(), "#FFFFFF");
         this.lbNumber.color = hex;
     }
 

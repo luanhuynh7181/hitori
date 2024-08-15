@@ -3,6 +3,11 @@ import { SceneGame } from '../SceneGame';
 import { LayoutBoard } from './LayoutBoard';
 import { EVENT_TYPE, GAME_LAYOUT, PACK_TYPE } from '../../Enum';
 import { Transition } from '../../effect/Transition';
+import DataConfig from '../../board/DataConfig';
+import PackConfig from '../../board/PackConfig';
+import BoardConfig from '../../board/BoardConfig';
+import { LocalStorage } from '../../Storage';
+import { Utility } from '../../Utility';
 const { ccclass, property } = _decorator;
 
 @ccclass('LayoutLobby')
@@ -28,10 +33,15 @@ export class LayoutLobby extends Component {
     }
 
     onClickPlayNow(event: EventTouch) {
+        const boardInfo = Utility.getNextBoard();
+        if (boardInfo) {
+            director.emit(EVENT_TYPE.SWITCH_LAYOUT, { layout: GAME_LAYOUT.GAME, data: boardInfo });
+            return;
+        }
+        console.log("All board finished");
     }
 
     onClickSelectBoard(event: EventTouch) {
-        // const scene: SceneGame = director.getScene().getChildByName("SceneGame").getComponent(SceneGame);
         director.emit(EVENT_TYPE.SWITCH_LAYOUT, { layout: GAME_LAYOUT.BOARD, data: PACK_TYPE.CLASSIC });
     }
 

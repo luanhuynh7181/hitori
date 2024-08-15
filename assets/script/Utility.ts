@@ -1,4 +1,8 @@
-import { Tcoords } from "./Type";
+import DataConfig from "./board/DataConfig";
+import PackConfig from "./board/PackConfig";
+import { PACK_TYPE } from "./Enum";
+import { LocalStorage } from "./Storage";
+import { BoardInfo, Tcoords } from "./Type";
 
 
 export class Utility {
@@ -18,5 +22,19 @@ export class Utility {
             }
         }
         return result;
+    }
+
+    public static getNextBoard(): BoardInfo {
+        const pack: PackConfig = DataConfig.getPackConfig(PACK_TYPE.CLASSIC);
+        const a = pack.getBoardConfigSortedBySize();
+        for (const { size, boardConfig } of pack.getBoardConfigSortedBySize()) {
+            for (let i = 0; i < boardConfig.length; i++) {
+                const boardInfo: BoardInfo = { packType: PACK_TYPE.CLASSIC, boardSize: size, boardIndex: i };
+                if (!LocalStorage.isBoardFinished(boardInfo)) {
+                    return boardInfo;
+                }
+            }
+        }
+        return null;
     }
 }

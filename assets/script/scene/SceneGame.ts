@@ -13,8 +13,16 @@ export class SceneGame extends Component {
     @property(LayoutBoard) layoutBoard: LayoutBoard;
 
     start() {
-        this.setVisibleLayout({ layout: GAME_LAYOUT.LOBBY });
+        this.loadLayout();
+
         director.on(EVENT_TYPE.SWITCH_LAYOUT, this.setVisibleLayout, this);
+        this.setVisibleLayout({ layout: GAME_LAYOUT.LOBBY });
+    }
+
+    loadLayout() {
+        this.layoutLobby.node.active = true;
+        this.layoutGame.node.active = true;
+        this.layoutBoard.node.active = true;
     }
 
     setVisibleLayout(data: { layout: GAME_LAYOUT, data?: any }) {

@@ -12,6 +12,7 @@ import BoardConfig from '../../board/BoardConfig';
 import DataConfig from '../../board/DataConfig';
 import { EVENT_TYPE, GAME_LAYOUT } from '../../Enum';
 import { Transition } from '../../effect/Transition';
+import { LocalStorage } from '../../Storage';
 
 const { ccclass, property } = _decorator;
 
@@ -27,6 +28,7 @@ export class LayoutGame extends Component {
     @property(Node) btnHelp: Node = null;
     @property(Node) nodeTop: Node = null;
     @property(Node) nodeInfo: Node = null;
+    @property(Node) popupWin: Node = null;
 
     private poolUIcell: Node[] = [];
 
@@ -35,6 +37,7 @@ export class LayoutGame extends Component {
     private cells: UICell[][] = [];
     private changeTypeCommand: ChangeTypeHistory = new ChangeTypeHistory();
     private transition: Transition = new Transition();
+    private boardInfo: BoardInfo = null;
 
     onLoad() {
         this.toucher = new BoardMouse(
@@ -57,6 +60,7 @@ export class LayoutGame extends Component {
     }
 
     onShow(boardInfo: BoardInfo) {
+        this.boardInfo = boardInfo;
         this.node.active = true;
         this.clearDataAndUI();
         this.transition.runIn();
@@ -203,7 +207,10 @@ export class LayoutGame extends Component {
     }
 
     checkWin() {
-
+        if (this.dataBoard.isWin()) {
+            LocalStorage.cacheBoardFinished(this.boardInfo);
+            this.popupWin.active = true;
+        }
     }
 
     onLeftClick(coords: Tcoords) {
@@ -240,24 +247,17 @@ export class LayoutGame extends Component {
 
     }
 
-    onClickHelp() {
-        const arrRandom = [18, 20];
-        const random = arrRandom[Math.floor(Math.random() * arrRandom.length)];
-        const boardInfo: BoardInfo = { packType: 0, boardSize: random, boardIndex: 0 };
-        this.node.active = true;
-        this.clearDataAndUI();
-        this.transition.runIn();
-        const boardConfig: BoardConfig = DataConfig.getBoardConfig(boardInfo);
-        this.updateLayoutBoard(boardConfig.data.length);
-        this.dataBoard.createBoard(boardConfig.data);
-        this.createUICell();
-        this.addToHistory();
-        return
 
+    onClickHelp() {
         const invalidCoords = this.dataBoard.getCoordsInvald();
         for (const coords of invalidCoords) {
             const cell: UICell = this.getCell(coords);
             cell.showCellValidNumber();
         }
     }
+
+    onClickTut() {
+
+    }
+
 }
