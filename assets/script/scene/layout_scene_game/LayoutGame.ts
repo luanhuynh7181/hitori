@@ -31,6 +31,7 @@ export class LayoutGame extends Component {
     @property(Node) nodeTop: Node = null;
     @property(Node) nodeInfo: Node = null;
     @property(Node) popupWin: Node = null;
+    @property(Node) nodeCellUI: Node = null;
 
     poolUIcell: Node[] = [];
     dataBoard: DataBoard = new DataBoard();
@@ -78,7 +79,7 @@ export class LayoutGame extends Component {
         const pos = new Vec3(2000, 200);
         for (let i = 0; i < maxCell; i++) {
             const node: Node = instantiate(this.cellPrefab);
-            this.nodeBoardGame.addChild(node);
+            this.nodeCellUI.addChild(node);
             this.poolUIcell.push(node);
             node.setPosition(pos);
         }
@@ -262,6 +263,7 @@ export class LayoutGame extends Component {
     onClickTut() {
         const node: Node = instantiate(this.node);
         const layoutGame = node.getComponent(LayoutGame);
+        layoutGame.nodeCellUI.removeAllChildren();
         layoutGame.nodeTop.destroy();
         layoutGame.btnNext.destroy();
         layoutGame.btnUndo.destroy();
