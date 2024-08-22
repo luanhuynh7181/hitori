@@ -49,8 +49,9 @@ export class LayoutLobby extends Component {
     }
 
     onShow(data: any) {
-        this.node.active = true;
-        this.transition.runIn();
+        setTimeout(() => {
+            this.transition.runIn();
+        }, 0);
     }
 }
 

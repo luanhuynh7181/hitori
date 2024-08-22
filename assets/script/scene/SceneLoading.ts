@@ -7,10 +7,16 @@ const { ccclass, property } = _decorator;
 
 @ccclass('SceneLoading')
 export class SceneLoading extends Component {
+
+    @property(Node) nodeLoading: Node;
+
     async start() {
-        console.log("sceneLoading")
+        this.setLoadingProgress(1);
+        await this.loadSceneGame();
+        this.setLoadingProgress(2);
         await this.loadConfig();
         director.loadScene("SceneGame");
+
     };
 
     async loadConfig() {
@@ -20,6 +26,7 @@ export class SceneLoading extends Component {
             { name: PACK_TYPE.CUSTOM, "path": "custom" },
         ]
         try {
+            let loadingProgress = 2;
             for (const data of boardData) {
                 const jsonAsset = await this.loadDirAsync(data.path);
                 const pack: PackConfig = new PackConfig();
@@ -35,6 +42,7 @@ export class SceneLoading extends Component {
                     pack.addBoardConfig(boardSize, boards);
                 }
                 DataConfig.addPackConfig(data.name, pack);
+                this.setLoadingProgress(++loadingProgress);
             }
         }
         catch (err) {
@@ -64,6 +72,26 @@ export class SceneLoading extends Component {
                 }
             });
         });
+    }
+
+    async loadSceneGame() {
+        await new Promise<void>((resolve) => {
+            director.preloadScene("SceneGame", function () {
+                resolve(); // Resolve the promise when the scene is preloaded
+            });
+        });
+    }
+
+    setLoadingProgress(number: number) {
+        const children = this.nodeLoading.children;
+        for (let i = 0; i < children.length; i++) {
+            const node = children[i];
+            if (i < number) {
+                node.active = true;
+            } else {
+                node.active = false;
+            }
+        }
     }
 }
 

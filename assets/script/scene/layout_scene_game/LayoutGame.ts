@@ -65,7 +65,6 @@ export class LayoutGame extends Component {
 
     onShow(boardInfo: BoardInfo) {
         this.boardInfo = boardInfo;
-        this.node.active = true;
         this.clearDataAndUI();
         this.transition.runIn();
         const boardConfig: BoardConfig = DataConfig.getBoardConfig(boardInfo);

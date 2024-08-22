@@ -18,7 +18,6 @@ export class LayoutBoard extends Component {
     }
 
     onShow(packType: PACK_TYPE) {
-        this.node.active = true;
         this.transition.runIn();
     }
 

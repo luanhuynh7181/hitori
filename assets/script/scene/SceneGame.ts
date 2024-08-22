@@ -7,7 +7,7 @@ const { ccclass, property } = _decorator;
 
 @ccclass('SceneGame')
 export class SceneGame extends Component {
-
+    @property(Node) background: Node;
     @property(LayoutLobby) layoutLobby: LayoutLobby;
     @property(LayoutGame) layoutGame: LayoutGame;
     @property(LayoutBoard) layoutBoard: LayoutBoard;
@@ -26,17 +26,18 @@ export class SceneGame extends Component {
     }
 
     setVisibleLayout(data: { layout: GAME_LAYOUT, data?: any }) {
-        this.layoutLobby.node.active = false;
-        this.layoutBoard.node.active = false;
-        this.layoutGame.node.active = false;
+        this.background.setSiblingIndex(10);
         switch (data.layout) {
             case GAME_LAYOUT.LOBBY:
+                this.layoutLobby.node.setSiblingIndex(10);
                 this.layoutLobby.onShow(data.data);
                 break;
             case GAME_LAYOUT.BOARD:
+                this.layoutBoard.node.setSiblingIndex(10);
                 this.layoutBoard.onShow(data.data);
                 break;
             case GAME_LAYOUT.GAME:
+                this.layoutGame.node.setSiblingIndex(10);
                 this.layoutGame.onShow(data.data);
                 break;
         }

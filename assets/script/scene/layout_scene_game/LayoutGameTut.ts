@@ -96,7 +96,6 @@ export class LayoutGameTut {
     showMarked() {
         const popupTut = this.popupTut.getComponent(PopupTut);
         popupTut.showMarkedCell();
-        popupTut.showInvalidCoords();
         const layerGame: LayoutGame = this.getLayoutGame();
         const data: UICell[][] = layerGame.cells
         const coords: Tcoords[] = [
