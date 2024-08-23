@@ -11,9 +11,9 @@ export class SceneLoading extends Component {
     @property(Node) nodeLoading: Node;
 
     async start() {
-        this.setLoadingProgress(1);
-        await this.loadSceneGame();
         this.setLoadingProgress(2);
+        await this.loadSceneGame();
+        this.setLoadingProgress(3);
         await this.loadConfig();
         director.loadScene("SceneGame");
 
@@ -26,7 +26,7 @@ export class SceneLoading extends Component {
             { name: PACK_TYPE.CUSTOM, "path": "custom" },
         ]
         try {
-            let loadingProgress = 2;
+            let loadingProgress = 3;
             for (const data of boardData) {
                 const jsonAsset = await this.loadDirAsync(data.path);
                 const pack: PackConfig = new PackConfig();

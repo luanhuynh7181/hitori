@@ -1,3 +1,4 @@
+import { Sprite, Node, Color } from "cc";
 import DataConfig from "./board/DataConfig";
 import PackConfig from "./board/PackConfig";
 import { PACK_TYPE } from "./Enum";
@@ -52,5 +53,11 @@ export class Utility {
             }
         }
         return { total, finished };
+    }
+
+    public static updateColorSprite(node: Node, color: string) {
+        const label = node.getComponent(Sprite);
+        const hex = Color.fromHEX(new Color(), color);
+        label.color = hex;
     }
 }

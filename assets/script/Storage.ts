@@ -1,3 +1,4 @@
+import { PACK_TYPE } from "./Enum";
 import { BoardInfo } from "./Type";
 
 export class _LocalStorage {
@@ -29,6 +30,16 @@ export class _LocalStorage {
     isBoardFinished(boardInfo: BoardInfo): boolean {
         const key = this.getKeyBoard(boardInfo);
         return this.getItem(key) === '1';
+    }
+
+    isFinishAllBoardSize(boardSize: number): boolean {
+        for (let i = 0; i < boardSize; i++) {
+            const boardInfo: BoardInfo = { packType: PACK_TYPE.CLASSIC, boardSize, boardIndex: i };
+            if (!this.isBoardFinished(boardInfo)) {
+                return false;
+            }
+        }
+        return true;
     }
 
     cacheBoardFinished(boardInfo: BoardInfo) {

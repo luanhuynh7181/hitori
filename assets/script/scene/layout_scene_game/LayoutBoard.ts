@@ -2,6 +2,7 @@ import { _decorator, AssetManager, clamp, Component, director, EventTouch, Node,
 import { SceneGame } from '../SceneGame';
 import { EVENT_TYPE, GAME_LAYOUT, PACK_TYPE } from '../../Enum';
 import { Transition } from '../../effect/Transition';
+import { PageviewPack } from '../../board_view/PageviewPack';
 
 const { ccclass, property } = _decorator;
 
@@ -13,12 +14,13 @@ export class LayoutBoard extends Component {
 
     onLoad() {
         this.transition.addTransition(this.btnBack, -100);
-        this.transition.addTransition(this.packView, 0, 0);
+        this.transition.addTransition(this.packView, 100);
         director.on(EVENT_TYPE.ONCLICK_ITEM_BOARD, this.onClickItemBoard, this);
     }
 
     onShow(packType: PACK_TYPE) {
         this.transition.runIn();
+        this.packView.getComponent(PageviewPack).onShow(packType);
     }
 
     onClickItemBoard(data: { layout: GAME_LAYOUT, data: any }) {
