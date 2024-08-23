@@ -37,4 +37,20 @@ export class Utility {
         }
         return null;
     }
+
+    public static getBoardFinishInfo(): { total: number, finished: number } {
+        const pack: PackConfig = DataConfig.getPackConfig(PACK_TYPE.CLASSIC);
+        let total = 0;
+        let finished = 0;
+        for (const { size, boardConfig } of pack.getBoardConfigSortedBySize()) {
+            total += boardConfig.length;
+            for (let i = 0; i < boardConfig.length; i++) {
+                const boardInfo: BoardInfo = { packType: PACK_TYPE.CLASSIC, boardSize: size, boardIndex: i };
+                if (LocalStorage.isBoardFinished(boardInfo)) {
+                    finished++;
+                }
+            }
+        }
+        return { total, finished };
+    }
 }
