@@ -406,7 +406,7 @@
     "__prefab": null,
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 1128,
+      "width": 1400,
       "height": 615
     },
     "_anchorPoint": {
@@ -492,8 +492,8 @@
     },
     "_lscale": {
       "__type__": "cc.Vec3",
-      "x": 0.64,
-      "y": 0.64,
+      "x": 0.78,
+      "y": 0.78,
       "z": 1
     },
     "_mobility": 0,

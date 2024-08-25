@@ -17,6 +17,10 @@ export class Transition {
         return this;
     }
 
+    public updateOrgPos(node: Node) {
+        node.orgPos = node.getPosition();
+    }
+
     public runIn() {
         for (const tran of this.transition) {
             Tween.stopAllByTarget(tran.node);

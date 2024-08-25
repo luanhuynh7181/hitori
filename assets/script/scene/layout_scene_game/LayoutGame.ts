@@ -1,4 +1,4 @@
-import { _decorator, clamp, Component, director, EventTouch, instantiate, Label, Node, Prefab, UI, UITransform, v3, Vec2, Vec3 } from 'cc';
+import { _decorator, clamp, Component, director, EventTouch, instantiate, Label, math, Node, Prefab, UI, UITransform, v3, Vec2, Vec3 } from 'cc';
 import { DataBoard } from '../../data/DataBoard';
 import { BoardMouse } from '../../ui/BoardMouse';
 import { UICell } from '../../ui/ui_cell/UICell';
@@ -56,6 +56,9 @@ export class LayoutGame extends Component {
         this.addTransition();
     }
 
+    onResize(designeResolution: math.Size, visibleSize: math.Size) {
+    }
+
     addTransition() {
         this.transition.addTransition(this.nodeTop, 0, 100)
             .addTransition(this.nodeInfo, -100)
@@ -111,9 +114,11 @@ export class LayoutGame extends Component {
 
     createUICell() {
         const board: IDataCell[][] = this.dataBoard.board;
-        const padding: number = 3;
+
         const boardWidth = this.nodeBoardGame.getComponent(UITransform).width;
+
         const cellSize = boardWidth / board.length;
+        const padding: number = cellSize * 0.08;
         const posStart: Vec2 = new Vec2(-boardWidth / 2 + cellSize / 2, boardWidth / 2 - cellSize / 2);
         let uiCellIndex = 0;
         for (let i = 0; i < board.length; i++) {

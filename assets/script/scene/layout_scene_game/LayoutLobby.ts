@@ -1,4 +1,4 @@
-import { _decorator, assetManager, Component, director, EventTouch, Label, Node } from 'cc';
+import { _decorator, assetManager, Component, director, EventTouch, Label, math, Node, view } from 'cc';
 import { EVENT_TYPE, GAME_LAYOUT, PACK_TYPE } from '../../Enum';
 import { Transition } from '../../effect/Transition';
 import { Utility } from '../../Utility';
@@ -19,6 +19,9 @@ export class LayoutLobby extends Component {
         this.transition.addTransition(this.btnPlayNow, 0, 50, 0.2);
         this.transition.addTransition(this.btnSelectBoard, 0, 50, 0.1);
         this.transition.addTransition(this.lbVer, 0, -200);
+    }
+
+    onResize(designeResolution: math.Size, visibleSize: math.Size) {
     }
 
     onClickPlayNow(event: EventTouch) {

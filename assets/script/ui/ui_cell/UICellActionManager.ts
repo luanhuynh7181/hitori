@@ -7,10 +7,11 @@ export class UICellActionManager {
 
     constructor(uiCell: UICell) {
         this._cell = uiCell;
-        this._currentAction = new UICellUnshade();
+        this._currentAction = null;
     }
 
     doAction(ActionClass: new () => IUICellAction): void {
+        if (this._currentAction instanceof ActionClass) return;
         this._currentAction = new ActionClass() as IUICellAction;
         this.executeAction();
     }

@@ -1,4 +1,4 @@
-import { _decorator, AssetManager, clamp, Component, director, EventTouch, Node, PageView } from 'cc';
+import { _decorator, AssetManager, clamp, Component, director, EventTouch, math, Node, PageView, UITransform, Widget } from 'cc';
 import { SceneGame } from '../SceneGame';
 import { EVENT_TYPE, GAME_LAYOUT, PACK_TYPE } from '../../Enum';
 import { Transition } from '../../effect/Transition';
@@ -13,10 +13,19 @@ export class LayoutBoard extends Component {
     private transition: Transition = new Transition();
 
     onLoad() {
-        this.transition.addTransition(this.btnBack, -100);
-        this.transition.addTransition(this.packView, 100);
+        this.transition
+            .addTransition(this.btnBack, -100)
+            .addTransition(this.packView, 100);
         director.on(EVENT_TYPE.ONCLICK_ITEM_BOARD, this.onClickItemBoard, this);
     }
+
+    onResize(designeResolution: math.Size, visibleSize: math.Size) {
+        console.log("onResize", visibleSize, designeResolution);
+        this.node.getComponent(UITransform).setContentSize(visibleSize);
+        this.btnBack.getComponent(Widget).updateAlignment();
+        this.transition.updateOrgPos(this.btnBack);
+    }
+
 
     onShow(packType: PACK_TYPE) {
         this.transition.runIn();

@@ -80,18 +80,25 @@ export class UICell extends Component {
     }
 
     showCellValidNumber() {
-        const hex = Color.fromHEX(new Color(), "#FF0000");
-        this.lbNumber.color = hex;
+        //  const hex = Color.fromHEX(new Color(), "#FF0000");
+        // this.lbNumber.color = hex;
     }
 
     resetColor() {
-        const hex = Color.fromHEX(new Color(), "#FFFFFF");
-        this.lbNumber.color = hex;
+        // const hex = Color.fromHEX(new Color(), "#FFFFFF");
+        // this.lbNumber.color = hex;
     }
 
     public updateColor(color: string) {
         const hex = Color.fromHEX(new Color(), color);
         this.imgBg.getComponent(Sprite).color = hex;
+    }
+
+    public updateStyle(bgColor: string, textColor: string) {
+        const hexText = Color.fromHEX(new Color(), textColor);
+        const hexBg = Color.fromHEX(new Color(), bgColor);
+        this.lbNumber.color = hexText;
+        this.imgBg.getComponent(Sprite).color = hexBg;
     }
 }
 
