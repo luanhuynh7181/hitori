@@ -8,13 +8,13 @@ export class PageviewDot extends Component {
     setup(isFinished: boolean) {
         this.isFinished = isFinished;
         if (isFinished) {
-            Utility.updateColorSprite(this.node, "#5BC300");
+            Utility.updateColorNode(this.node, "#5BC300");
         }
     }
 
     updateColor(isSelected: boolean) {
         if (this.isFinished) return;
-        Utility.updateColorSprite(this.node, isSelected ? "#173438" : "#A3B4A0");
+        Utility.updateColorNode(this.node, isSelected ? "#173438" : "#A3B4A0");
     }
 }
 

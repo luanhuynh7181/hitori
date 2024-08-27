@@ -55,9 +55,14 @@ export class Utility {
         return { total, finished };
     }
 
-    public static updateColorSprite(node: Node, color: string) {
+    public static updateColorNode(node: Node, color: string) {
         const label = node.getComponent(Sprite);
-        const hex = Color.fromHEX(new Color(), color);
-        label.color = hex;
+        this.updateColorSprite(label, color);
     }
+
+    public static updateColorSprite(sprite: Sprite, color: string) {
+        const hex = Color.fromHEX(new Color(), color);
+        sprite.color = hex;
+    }
+
 }

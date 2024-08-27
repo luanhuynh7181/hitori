@@ -9,8 +9,9 @@ export class NodeTimer extends Component {
 
     }
 
-    onEnable() {
+    onShow() {
         this.time = -1;
+        this.updateTime();
         this.unschedule(this.updateTime);
         this.schedule(this.updateTime, 1);
     }

@@ -26,4 +26,11 @@ export class ChangeTypeHistory {
         }
         return command;
     }
+
+    getState(): { canUndo: boolean, canRedo: boolean } {
+        return {
+            canUndo: this.index > 0,
+            canRedo: this.index < this.commandHistory.length - 1
+        }
+    }
 }

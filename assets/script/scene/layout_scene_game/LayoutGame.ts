@@ -1,4 +1,4 @@
-import { _decorator, clamp, Component, director, EventTouch, instantiate, Label, math, Node, Prefab, UI, UITransform, v3, Vec2, Vec3, Widget } from 'cc';
+import { _decorator, clamp, Component, director, EventTouch, instantiate, Label, math, Node, Prefab, Sprite, UI, UITransform, v3, Vec2, Vec3, Widget } from 'cc';
 import { DataBoard } from '../../data/DataBoard';
 import { BoardMouse } from '../../ui/BoardMouse';
 import { UICell } from '../../ui/ui_cell/UICell';
@@ -13,6 +13,8 @@ import { EVENT_TYPE, GAME_LAYOUT, PACK_TYPE } from '../../Enum';
 import { Transition } from '../../effect/Transition';
 import { LocalStorage } from '../../Storage';
 import { LayoutGameTut } from './LayoutGameTut';
+import { NodeInnovation } from '../../nodeComponent/NodeInnovation';
+import { NodeTimer } from '../../nodeComponent/NodeTimer';
 
 const { ccclass, property } = _decorator;
 
@@ -27,6 +29,10 @@ export class LayoutGame extends Component {
     @property(Node) nodeLeft: Node = null;
     @property(Node) nodeBtn: Node = null;
     @property(Node) nodeCellUI: Node = null;
+    @property(NodeInnovation) scriptInovation: NodeInnovation = null;
+    @property(NodeTimer) sctipTime: NodeTimer = null;
+    @property(Sprite) spriteUndo: Sprite = null;
+    @property(Sprite) spriteNext: Sprite = null;
 
     poolUIcell: Node[] = [];
     dataBoard: DataBoard = new DataBoard();
@@ -64,6 +70,7 @@ export class LayoutGame extends Component {
         this.nodeBtn.getComponent(Widget).updateAlignment();
         this.transition.updateOrgPos(this.nodeBtn);
     }
+
     addTransition() {
         this.transition
             .addTransition(this.nodeLeft, -200, 0)
@@ -80,6 +87,8 @@ export class LayoutGame extends Component {
         this.dataBoard.createBoard(boardConfig.data);
         this.createUICell();
         this.addToHistory();
+        this.scriptInovation.onShow();
+        this.sctipTime.onShow();
     }
 
     preloadUICell(maxCell: number = 400) {
@@ -170,6 +179,13 @@ export class LayoutGame extends Component {
     addToHistory() {
         const command = new ChangeTypeCommand(this.cells);
         this.changeTypeCommand.add(command);
+        this.updateStateUndoAndNext();
+    }
+
+    updateStateUndoAndNext() {
+        const state = this.changeTypeCommand.getState();
+        Utility.updateColorSprite(this.spriteUndo, state.canUndo ? "#173438" : "#6B6B6B");
+        Utility.updateColorSprite(this.spriteNext, state.canRedo ? "#173438" : "#6B6B6B");
     }
 
     updateUIAllCell() {
@@ -213,11 +229,17 @@ export class LayoutGame extends Component {
     }
 
     undoAction() {
+        const canUndo = this.changeTypeCommand.getState().canUndo;
+        if (!canUndo) return;
         const command: ChangeTypeCommand = this.changeTypeCommand.undo();
+        this.updateStateUndoAndNext();
     }
 
     nextAction() {
+        const canRedo = this.changeTypeCommand.getState().canRedo;
+        if (!canRedo) return;
         const command: ChangeTypeCommand = this.changeTypeCommand.next();
+        this.updateStateUndoAndNext();
     }
 
     checkWin() {

@@ -23,7 +23,7 @@ export class PageviewItem extends Component {
         let isFinished = LocalStorage.isBoardFinished(this.boardInfo);
         this.iconCheck.active = isFinished;
         this.label.node.active = !isFinished;
-        Utility.updateColorSprite(this.nodeFront, isFinished ? "#5BC300" : "#173438");
+        Utility.updateColorNode(this.nodeFront, isFinished ? "#5BC300" : "#173438");
     }
 
     onClick() {
