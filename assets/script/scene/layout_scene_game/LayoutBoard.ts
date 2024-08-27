@@ -20,7 +20,6 @@ export class LayoutBoard extends Component {
     }
 
     onResize(designeResolution: math.Size, visibleSize: math.Size) {
-        console.log("onResize", visibleSize, designeResolution);
         this.node.getComponent(UITransform).setContentSize(visibleSize);
         this.btnBack.getComponent(Widget).updateAlignment();
         this.transition.updateOrgPos(this.btnBack);

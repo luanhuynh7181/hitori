@@ -1,8 +1,7 @@
-import { _decorator, clamp, Component, director, EventTouch, instantiate, Label, math, Node, Prefab, UI, UITransform, v3, Vec2, Vec3 } from 'cc';
+import { _decorator, clamp, Component, director, EventTouch, instantiate, Label, math, Node, Prefab, UI, UITransform, v3, Vec2, Vec3, Widget } from 'cc';
 import { DataBoard } from '../../data/DataBoard';
 import { BoardMouse } from '../../ui/BoardMouse';
 import { UICell } from '../../ui/ui_cell/UICell';
-import { Signal } from '../../design/Signal';
 import { ChangeTypeHistory } from '../../design/history/ChangeTypeHistory';
 import { IDataCell } from '../../data/DataCell';
 import { BoardInfo, Tcoords } from '../../Type';
@@ -23,14 +22,10 @@ export class LayoutGame extends Component {
     @property(Prefab) cellPrefab: Prefab = null;
     @property(Prefab) popupTut: Prefab = null;
     @property(Node) nodeBoardGame: Node = null;
-    @property(Node) nodeBg: Node = null;
+    @property(Node) imgBorder: Node = null;
     @property(Node) imgTarget: Node = null;
-    @property(Node) btnUndo: Node = null;
-    @property(Node) btnNext: Node = null;
-    @property(Node) btnHelp: Node = null;
-    @property(Node) nodeTop: Node = null;
-    @property(Node) nodeInfo: Node = null;
-    @property(Node) popupWin: Node = null;
+    @property(Node) nodeLeft: Node = null;
+    @property(Node) nodeBtn: Node = null;
     @property(Node) nodeCellUI: Node = null;
 
     poolUIcell: Node[] = [];
@@ -57,13 +52,23 @@ export class LayoutGame extends Component {
     }
 
     onResize(designeResolution: math.Size, visibleSize: math.Size) {
-    }
+        this.node.getComponent(UITransform).setContentSize(visibleSize);
 
+        this.nodeLeft.getComponent(Widget).updateAlignment();
+        this.transition.updateOrgPos(this.nodeLeft);
+
+        const sizeNodeLeft = this.nodeLeft.getComponent(UITransform).width;
+        this.nodeBoardGame.setPosition((visibleSize.width - sizeNodeLeft) / 2 + sizeNodeLeft - visibleSize.width / 2, 0);
+        this.transition.updateOrgPos(this.nodeBoardGame);
+
+        this.nodeBtn.getComponent(Widget).updateAlignment();
+        this.transition.updateOrgPos(this.nodeBtn);
+    }
     addTransition() {
-        this.transition.addTransition(this.nodeTop, 0, 100)
-            .addTransition(this.nodeInfo, -100)
-            .addTransition(this.nodeBg, 0, 100)
-            .addTransition(this.nodeBoardGame, 0, 100)
+        this.transition
+            .addTransition(this.nodeLeft, -200, 0)
+            .addTransition(this.nodeBoardGame, 200, 0)
+            .addTransition(this.nodeBtn, 0, 200)
     }
 
     onShow(boardInfo: BoardInfo) {
@@ -88,17 +93,18 @@ export class LayoutGame extends Component {
     }
 
     updateLayoutBoard(size: number) {
-        const max = 450;
+        const max = 630;
         const min = 300;
         const minSize = 4;
         const maxSize = 20
         const width = (max - min) / (maxSize - minSize) * (size - minSize) + min;
         this.nodeBoardGame.getComponent(UITransform).width = width;
         this.nodeBoardGame.getComponent(UITransform).height = width;
-        this.nodeBg.getComponent(UITransform).width = width + 15;
-        this.nodeBg.getComponent(UITransform).height = width + 15;
-        this.btnNext.setPosition(80, -width / 2 - 45);
-        this.btnUndo.setPosition(-80, -width / 2 - 45);
+        const isActive = size < 13;
+        this.imgBorder.active = isActive;
+        if (!isActive) return;
+        this.imgBorder.getComponent(UITransform).width = width + 15;
+        this.imgBorder.getComponent(UITransform).height = width + 15;
     }
 
     clearDataAndUI() {
@@ -217,7 +223,6 @@ export class LayoutGame extends Component {
     checkWin() {
         if (this.dataBoard.isWin()) {
             LocalStorage.cacheBoardFinished(this.boardInfo);
-            this.popupWin.active = true;
         }
     }
 
@@ -268,10 +273,6 @@ export class LayoutGame extends Component {
         const node: Node = instantiate(this.node);
         const layoutGame = node.getComponent(LayoutGame);
         layoutGame.nodeCellUI.removeAllChildren();
-        layoutGame.nodeTop.destroy();
-        layoutGame.btnNext.destroy();
-        layoutGame.btnUndo.destroy();
-        layoutGame.nodeInfo.destroy();
         layoutGame.preloadUICell = layoutGame.preloadUICell.bind(layoutGame, 25);
         this.node.parent.addChild(node);
         const newLayout = new LayoutGameTut(node, this.node);

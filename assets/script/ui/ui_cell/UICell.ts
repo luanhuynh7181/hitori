@@ -54,7 +54,7 @@ export class UICell extends Component {
     updateSize(size: number) {
         this.imgBg.getComponent(UITransform).width = size;
         this.imgBg.getComponent(UITransform).height = size;
-        this.lbNumber.fontSize = size * 0.7;
+        this.lbNumber.fontSize = size * 1.4
     }
 
     updateUIByPriority() { // check priority and update UI compare with previous priority

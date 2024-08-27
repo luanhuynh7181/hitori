@@ -10,7 +10,7 @@ export abstract class IUICellAction {
 export class UICellUnshade extends IUICellAction {
     public static colors = ["#97A5A9", "#B0BABD", "#9FAEB2", "#A0AFB6"];
     execute(cell: UICell): void {
-        cell.updateStyle(this.randomColor(), "#173438");
+        cell.updateStyle(this.randomColor(), "#000000");
     }
 
     randomColor(): string {

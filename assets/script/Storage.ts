@@ -29,7 +29,7 @@ export class _LocalStorage {
 
     isBoardFinished(boardInfo: BoardInfo): boolean {
         const key = this.getKeyBoard(boardInfo);
-        return this.getItem(key) === '1';
+        return this.getItem(key) != null;
     }
 
     isFinishAllBoardSize(boardSize: number): boolean {
@@ -42,9 +42,9 @@ export class _LocalStorage {
         return true;
     }
 
-    cacheBoardFinished(boardInfo: BoardInfo) {
+    cacheBoardFinished(boardInfo: BoardInfo, timeFinish) {
         const key = this.getKeyBoard(boardInfo);
-        this.setItem(key, '1');
+        this.setItem(key, timeFinish);
     }
 
 }

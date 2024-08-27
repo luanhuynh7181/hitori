@@ -17,14 +17,11 @@ export class SceneGame extends Component {
     @property(Node) background2: Node;
 
     start() {
-        this.loadLayout();
         director.on(EVENT_TYPE.SWITCH_LAYOUT, this.setVisibleLayout, this);
 
         window.addEventListener('resize', this.onResize.bind(this));
-        if (view.getVisibleSize().width != DESIGN_SIZE.WIDTH) { // fix height
-            this.onResize();
-        }
 
+        this.onResize();
         this.setVisibleLayout({ layout: GAME_LAYOUT.LOBBY });
     }
 
@@ -36,49 +33,26 @@ export class SceneGame extends Component {
         this.layoutBoard.onResize(designSize, viewSize);
     }
 
-    loadLayout() {
-        this.layoutLobby.node.active = true;
-        this.layoutGame.node.active = true;
-        this.layoutBoard.node.active = true;
-    }
-
     setVisibleLayout(data: { layout: GAME_LAYOUT, data?: any }) {
-        this.background.setSiblingIndex(10);
+        this.setOrderOnTop(this.background);
         switch (data.layout) {
             case GAME_LAYOUT.LOBBY:
-                this.layoutLobby.node.setSiblingIndex(10);
+                this.setOrderOnTop(this.layoutLobby.node);
                 this.layoutLobby.onShow(data.data);
-                this.updateBackground(false);
                 break;
             case GAME_LAYOUT.BOARD:
-                this.layoutBoard.node.setSiblingIndex(10);
+                this.setOrderOnTop(this.layoutBoard.node);
                 this.layoutBoard.onShow(data.data);
-                this.updateBackground(false);
                 break;
             case GAME_LAYOUT.GAME:
-                this.layoutGame.node.setSiblingIndex(10);
+                this.setOrderOnTop(this.layoutGame.node);
                 this.layoutGame.onShow(data.data);
-                this.updateBackground(true);
                 break;
         }
     }
 
-
-    updateBackground(isForGame: boolean) {
-        Tween.stopAllByTarget(this.background2);
-        tween(this.background2.getComponent(UIOpacity))
-            .to(0.2, { opacity: isForGame ? 0 : 100 })
-            .start();
-
-        Tween.stopAllByTarget(this.background);
-        tween(this.background.getComponent(UIOpacity))
-            .to(0.1, { opacity: 100 })
-            .call(() => {
-                this.background.getComponent(Sprite).color = Color.fromHEX(new Color(), isForGame ? "#CCD4D6" : "#FFFFFF")
-            })
-            .to(0.1, { opacity: 255 })
-            .start();
-
+    setOrderOnTop(node: Node) {
+        node.setSiblingIndex(1000);
     }
 }
 
