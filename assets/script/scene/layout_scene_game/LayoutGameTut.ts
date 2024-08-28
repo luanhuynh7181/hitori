@@ -6,19 +6,19 @@ import { UICell } from '../../ui/ui_cell/UICell';
 import { TCellPriorityInit, Tcoords } from '../../Type';
 import { IDataCell } from '../../data/DataCell';
 export class LayoutGameTut {
-    constructor(private popupTut: PopupTut, private layoutGame: LayoutGame, private originLayoutGame: LayoutGame) {
+    constructor(private popupTut: PopupTut, private node: Node, private originNode: Node) {
         popupTut.setCbNextTut(this.onNextTutorial.bind(this));
         popupTut.setCbExitTut(this.onClickExit.bind(this));
         this.onNextTutorial(TUT_STEP.RULE_TARGET);
     }
 
     onResize(visibleSize: math.Size, nodeBoardGame: Node) {
-        this.layoutGame.nodeBoardGame.setPosition(nodeBoardGame.getPosition());
+        this.getLayoutGame().nodeBoardGame.setPosition(nodeBoardGame.getPosition());
         this.popupTut.onResize(visibleSize);
     }
 
     getLayoutGame(): LayoutGame {
-        return this.layoutGame;
+        return this.node.getComponent(LayoutGame);
     }
 
     onNextTutorial(step: number) {
@@ -116,9 +116,10 @@ export class LayoutGameTut {
 
     onClickExit() {
         this.popupTut.node.destroy();
-        this.originLayoutGame.updateOrderTop(this.originLayoutGame.node);
-        this.originLayoutGame.transition.runIn();
-        this.originLayoutGame.layoutTutorial = null;
+        const layerGame: LayoutGame = this.originNode.getComponent(LayoutGame);
+        layerGame.updateOrderTop(this.originNode);
+        layerGame.transition.runIn();
+        layerGame.layoutTutorial = null;
     }
 
     showFinish() {

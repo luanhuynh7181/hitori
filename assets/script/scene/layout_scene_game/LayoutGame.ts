@@ -329,7 +329,7 @@ export class LayoutGame extends Component {
         nodeTut.addChild(nodeGame);
         this.node.parent.addChild(nodeTut);
         const popupTut: PopupTut = nodeTut.getComponent(PopupTut);
-        this.layoutTutorial = new LayoutGameTut(popupTut, layoutGame, this);
+        this.layoutTutorial = new LayoutGameTut(popupTut, layoutGame, this.node);
         layoutGame.onShow({ packType: PACK_TYPE.CLASSIC, boardSize: 4, boardIndex: 0 });
         this.layoutTutorial.onResize(view.getVisibleSize(), this.nodeBoardGame);
         this.updateOrderTop(nodeTut);
