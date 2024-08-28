@@ -6,11 +6,10 @@ import { UICell } from '../../ui/ui_cell/UICell';
 import { TCellPriorityInit, Tcoords } from '../../Type';
 import { IDataCell } from '../../data/DataCell';
 export class LayoutGameTut {
-    private tutStep: number = TUT_STEP.RULE_TARGET;
     constructor(private popupTut: PopupTut, private layoutGame: LayoutGame, private originLayoutGame: LayoutGame) {
         popupTut.setCbNextTut(this.onNextTutorial.bind(this));
         popupTut.setCbExitTut(this.onClickExit.bind(this));
-        popupTut.showFirstRule();
+        this.onNextTutorial(TUT_STEP.RULE_TARGET);
     }
 
     onResize(visibleSize: math.Size, nodeBoardGame: Node) {
@@ -22,11 +21,12 @@ export class LayoutGameTut {
         return this.layoutGame;
     }
 
-    onNextTutorial() {
-        this.tutStep++;
-
+    onNextTutorial(step: number) {
         this.resetUICell();
-        switch (this.tutStep) {
+        switch (step) {
+            case TUT_STEP.RULE_TARGET:
+                this.showFirstRule();
+                break;
             case TUT_STEP.INVALID_COORDS:
                 this.showInvalidCoords();
                 break;
@@ -64,6 +64,10 @@ export class LayoutGameTut {
         }
     }
 
+    showFirstRule() {
+        this.popupTut.showFirstRule();
+    }
+
     showInvalidCoords() {
         this.popupTut.showInvalidCoords();
         const layerGame: LayoutGame = this.getLayoutGame();
@@ -71,9 +75,8 @@ export class LayoutGameTut {
         const coords: Tcoords[] = [
             { row: 0, column: 0 },
             { row: 1, column: 0 },
-            { row: 3, column: 2 },
-            { row: 3, column: 3 },
-            { row: 1, column: 2 },
+            { row: 2, column: 2 },
+            { row: 2, column: 3 }
         ];
         for (const coord of coords) {
             data[coord.row][coord.column].isShaded = true;
@@ -120,5 +123,17 @@ export class LayoutGameTut {
 
     showFinish() {
         this.popupTut.showFinish();
+        const layerGame: LayoutGame = this.getLayoutGame();
+        const data: IDataCell[][] = layerGame.dataBoard.board;
+        const coords: Tcoords[] = [
+            { row: 0, column: 0 },
+            { row: 1, column: 3 },
+            { row: 3, column: 1 },
+            { row: 3, column: 3 }
+        ];
+        for (const coord of coords) {
+            data[coord.row][coord.column].isShaded = true;
+
+        }
     }
 }

@@ -5,9 +5,12 @@ const { ccclass, property } = _decorator;
 export class HoverButton extends Component {
     private scaleTo: number = 1.1;
     private scaleTime: number = 0.07;
+    private scaleOrg: number = 1;
     start() {
         this.node.on(Node.EventType.MOUSE_ENTER, this.onMouseEnter, this);
         this.node.on(Node.EventType.MOUSE_LEAVE, this.onMouseCancel, this);
+        this.scaleOrg = this.node.scale.x;
+        this.scaleTo = this.scaleOrg * 1.15;
     }
 
     onMouseEnter() {
@@ -21,7 +24,7 @@ export class HoverButton extends Component {
     onMouseCancel() {
         const node = this.node;
         Tween.stopAllByTag(1, node);
-        tween(node).to(this.scaleTime, { scale: v3(1, 1, 1) }).
+        tween(node).to(this.scaleTime, { scale: v3(this.scaleOrg, this.scaleOrg, this.scaleOrg) }).
             tag(1).
             start()
     }
