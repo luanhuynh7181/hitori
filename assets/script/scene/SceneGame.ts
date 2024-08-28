@@ -34,7 +34,6 @@ export class SceneGame extends Component {
     }
 
     setVisibleLayout(data: { layout: GAME_LAYOUT, data?: any }) {
-        this.setOrderOnTop(this.background);
         switch (data.layout) {
             case GAME_LAYOUT.LOBBY:
                 this.setOrderOnTop(this.layoutLobby.node);
@@ -52,6 +51,7 @@ export class SceneGame extends Component {
     }
 
     setOrderOnTop(node: Node) {
+        this.background.setSiblingIndex(1000);
         node.setSiblingIndex(1000);
     }
 }

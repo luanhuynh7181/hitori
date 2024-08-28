@@ -1,4 +1,4 @@
-import { _decorator, clamp, Component, director, EventTouch, instantiate, Label, math, Node, Prefab, Sprite, UI, UITransform, v3, Vec2, Vec3, Widget } from 'cc';
+import { _decorator, clamp, Component, director, EventTouch, instantiate, Label, math, Node, Prefab, Sprite, UI, UITransform, v3, Vec2, Vec3, view, Widget } from 'cc';
 import { DataBoard } from '../../data/DataBoard';
 import { BoardMouse } from '../../ui/BoardMouse';
 import { UICell } from '../../ui/ui_cell/UICell';
@@ -15,6 +15,8 @@ import { LocalStorage } from '../../Storage';
 import { LayoutGameTut } from './LayoutGameTut';
 import { NodeInnovation } from '../../nodeComponent/NodeInnovation';
 import { NodeTimer } from '../../nodeComponent/NodeTimer';
+import { PopupTut } from '../../nodeComponent/PopupTut';
+import { SceneGame } from '../SceneGame';
 
 const { ccclass, property } = _decorator;
 
@@ -33,6 +35,8 @@ export class LayoutGame extends Component {
     @property(NodeTimer) sctipTime: NodeTimer = null;
     @property(Sprite) spriteUndo: Sprite = null;
     @property(Sprite) spriteNext: Sprite = null;
+    @property(Label) lbBoardSize: Label = null;
+    @property(Label) lbBoardIndex: Label = null;
 
     poolUIcell: Node[] = [];
     dataBoard: DataBoard = new DataBoard();
@@ -41,8 +45,7 @@ export class LayoutGame extends Component {
     changeTypeCommand: ChangeTypeHistory = new ChangeTypeHistory();
     transition: Transition = new Transition();
     boardInfo: BoardInfo = null;
-    nodeTut: Node = null;
-
+    layoutTutorial: LayoutGameTut = null;
     onLoad() {
         console.log("onLoad");
         this.toucher = new BoardMouse(
@@ -69,6 +72,7 @@ export class LayoutGame extends Component {
 
         this.nodeBtn.getComponent(Widget).updateAlignment();
         this.transition.updateOrgPos(this.nodeBtn);
+        this.layoutTutorial?.onResize(visibleSize, this.nodeBoardGame);
     }
 
     addTransition() {
@@ -85,9 +89,10 @@ export class LayoutGame extends Component {
         const boardConfig: BoardConfig = DataConfig.getBoardConfig(boardInfo);
         this.updateLayoutBoard(boardConfig.data.length);
         this.dataBoard.createBoard(boardConfig.data);
+        this.updateInfoBoard();
         this.createUICell();
         this.addToHistory();
-        this.scriptInovation.onShow();
+        this.scriptInovation.onShow(boardInfo);
         this.sctipTime.onShow();
     }
 
@@ -116,6 +121,12 @@ export class LayoutGame extends Component {
         this.imgBorder.getComponent(UITransform).height = width + 15;
     }
 
+    updateInfoBoard() {
+        const size = this.dataBoard.board.length;
+        this.lbBoardSize.string = `${size}x${size}`;
+        this.lbBoardIndex.string = (this.boardInfo.boardIndex + 1).toString();
+    }
+
     clearDataAndUI() {
         for (const row of this.cells) {
             for (const cell of row) {
@@ -129,9 +140,7 @@ export class LayoutGame extends Component {
 
     createUICell() {
         const board: IDataCell[][] = this.dataBoard.board;
-
         const boardWidth = this.nodeBoardGame.getComponent(UITransform).width;
-
         const cellSize = boardWidth / board.length;
         const padding: number = cellSize * 0.08;
         const posStart: Vec2 = new Vec2(-boardWidth / 2 + cellSize / 2, boardWidth / 2 - cellSize / 2);
@@ -151,7 +160,7 @@ export class LayoutGame extends Component {
             }
             this.cells.push(uiRow);
         }
-        this.toucher.setup(this.cells, cellSize);
+        // this.toucher.setup(this.cells, cellSize);
     }
 
     getCell(coords: Tcoords): UICell {
@@ -292,12 +301,28 @@ export class LayoutGame extends Component {
     }
 
     onClickTut() {
-        const node: Node = instantiate(this.node);
-        const layoutGame = node.getComponent(LayoutGame);
+        const nodeTut: Node = instantiate(this.popupTut);
+        const nodeGame: Node = instantiate(this.node);
+        const layoutGame = nodeGame.getComponent(LayoutGame);
+        layoutGame.nodeBtn.removeFromParent();
+        layoutGame.nodeLeft.removeFromParent();
         layoutGame.nodeCellUI.removeAllChildren();
         layoutGame.preloadUICell = layoutGame.preloadUICell.bind(layoutGame, 25);
-        this.node.parent.addChild(node);
-        const newLayout = new LayoutGameTut(node, this.node);
+        layoutGame.checkWin = () => { };
+        nodeTut.addChild(nodeGame);
+        this.node.parent.addChild(nodeTut);
+        const popupTut: PopupTut = nodeTut.getComponent(PopupTut);
+        this.layoutTutorial = new LayoutGameTut(popupTut, layoutGame, this);
+        layoutGame.onShow({ packType: PACK_TYPE.CLASSIC, boardSize: 4, boardIndex: 0 });
+        this.layoutTutorial.onResize(view.getVisibleSize(), this.nodeBoardGame);
+        this.updateOrderTop(nodeTut);
+        popupTut.onShow();
+
+    }
+
+    updateOrderTop(node: Node) {
+        const scene = director.getScene();
+        scene.getChildByName("SceneGame").getComponent(SceneGame).setOrderOnTop(node);
     }
 
 }

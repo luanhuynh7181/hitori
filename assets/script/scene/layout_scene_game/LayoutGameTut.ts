@@ -1,4 +1,4 @@
-import { _decorator, Component, instantiate, Node, Scene, view } from 'cc';
+import { _decorator, Component, instantiate, math, Node, Scene, UITransform, view } from 'cc';
 import { LayoutGame } from './LayoutGame';
 import { PACK_TYPE, TUT_STEP } from '../../Enum';
 import { PopupTut } from '../../nodeComponent/PopupTut';
@@ -6,31 +6,20 @@ import { UICell } from '../../ui/ui_cell/UICell';
 import { TCellPriorityInit, Tcoords } from '../../Type';
 import { IDataCell } from '../../data/DataCell';
 export class LayoutGameTut {
-    private LayoutGame: LayoutGame;
-    private popupTut: Node;
     private tutStep: number = TUT_STEP.RULE_TARGET;
-    constructor(private nodeLayoutGame: Node, private nodeGame: Node) {
-        const layoutGame = nodeLayoutGame.getComponent(LayoutGame);
-        this.LayoutGame = layoutGame;
-        layoutGame.onShow({ packType: PACK_TYPE.CLASSIC, boardSize: 4, boardIndex: 0 });
-        this.addPopupTutorial();
-        layoutGame.checkWin = () => { };
-        const popupTut = this.popupTut.getComponent(PopupTut);
+    constructor(private popupTut: PopupTut, private layoutGame: LayoutGame, private originLayoutGame: LayoutGame) {
         popupTut.setCbNextTut(this.onNextTutorial.bind(this));
         popupTut.setCbExitTut(this.onClickExit.bind(this));
         popupTut.showFirstRule();
     }
 
-    getLayoutGame(): LayoutGame {
-        return this.LayoutGame;
+    onResize(visibleSize: math.Size, nodeBoardGame: Node) {
+        this.layoutGame.nodeBoardGame.setPosition(nodeBoardGame.getPosition());
+        this.popupTut.onResize(visibleSize);
     }
 
-    addPopupTutorial() {
-        const popupTut = instantiate(this.getLayoutGame().popupTut);
-        this.LayoutGame.node.addChild(popupTut);
-        this.popupTut = popupTut;
-        const screenSize = view.getVisibleSize();
-        popupTut.setPosition(-screenSize.width / 2, 0);
+    getLayoutGame(): LayoutGame {
+        return this.layoutGame;
     }
 
     onNextTutorial() {
@@ -76,8 +65,7 @@ export class LayoutGameTut {
     }
 
     showInvalidCoords() {
-        const popupTut = this.popupTut.getComponent(PopupTut);
-        popupTut.showInvalidCoords();
+        this.popupTut.showInvalidCoords();
         const layerGame: LayoutGame = this.getLayoutGame();
         const data: IDataCell[][] = layerGame.dataBoard.board;
         const coords: Tcoords[] = [
@@ -94,8 +82,7 @@ export class LayoutGameTut {
     }
 
     showMarked() {
-        const popupTut = this.popupTut.getComponent(PopupTut);
-        popupTut.showMarkedCell();
+        this.popupTut.showMarkedCell();
         const layerGame: LayoutGame = this.getLayoutGame();
         const data: UICell[][] = layerGame.cells
         const coords: Tcoords[] = [
@@ -109,8 +96,7 @@ export class LayoutGameTut {
     }
 
     showInvalidArea() {
-        const popupTut = this.popupTut.getComponent(PopupTut);
-        popupTut.showInvalidArea();
+        this.popupTut.showInvalidArea();
         const layerGame: LayoutGame = this.getLayoutGame();
         const data: IDataCell[][] = layerGame.dataBoard.board;
         const coords: Tcoords[] = [
@@ -124,13 +110,14 @@ export class LayoutGameTut {
         }
         layerGame.updatePriorityValidArea();
     }
+
     onClickExit() {
-        this.nodeGame.active = true;
-        this.nodeLayoutGame.destroy();
+        this.popupTut.node.destroy();
+        this.originLayoutGame.updateOrderTop(this.originLayoutGame.node);
+        this.originLayoutGame.transition.runIn();
     }
 
     showFinish() {
-        const popupTut = this.popupTut.getComponent(PopupTut);
-        popupTut.showFinish();
+        this.popupTut.showFinish();
     }
 }

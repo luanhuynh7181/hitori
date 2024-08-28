@@ -1,11 +1,31 @@
-import { _decorator, Component, Label, Node } from 'cc';
+import { _decorator, Component, Label, math, Node, UITransform, Widget } from 'cc';
+import { Transition } from '../effect/Transition';
 const { ccclass, property } = _decorator;
 
 @ccclass('PopupTut')
 export class PopupTut extends Component {
     @property(Label) lbTut: Label = null;
+    @property(Node) nodePopup: Node = null;
     private cbNextTut: Function = null;
     private cbExitTut: Function = null;
+    transition: Transition = new Transition();
+    start() {
+        this.transition
+            .addTransition(this.nodePopup, -200, 0)
+    }
+
+    onShow() {
+        this.scheduleOnce(() => {
+            this.transition.runIn();
+        });
+    }
+
+    onResize(visibleSize: math.Size) {
+        // this.node.getComponent(UITransform).setContentSize(visibleSize);
+        // this.nodePopup.getComponent(Widget).updateAlignment();
+        // this.transition.updateOrgPos(this.nodePopup);
+    }
+
     showFirstRule() {
         this.lbTut.string = "The rules of Hitori are simple\n- No number should appear unshaded more than once in a row or a column";
     }

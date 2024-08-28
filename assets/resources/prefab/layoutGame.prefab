@@ -907,7 +907,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "Roboto_Light",
+    "_name": "lbBoardSize",
     "_objFlags": 0,
     "__editorExtras__": {},
     "_parent": {
@@ -1069,7 +1069,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "Roboto_Light-001",
+    "_name": "lbBoardIndex",
     "_objFlags": 0,
     "__editorExtras__": {},
     "_parent": {
@@ -2798,6 +2798,8 @@
       "__id__": 0
     },
     "fileId": "71q3xAEuhHNbqDFFJxMNow",
+    "instance": null,
+    "targetOverrides": null,
     "nestedPrefabInstanceRoots": null
   },
   {
@@ -6301,7 +6303,7 @@
     },
     "component": "",
     "_componentId": "16b45rw89BBxY42MqWqyKjc",
-    "handler": "onClickBack",
+    "handler": "onClickTut",
     "customEventData": ""
   },
   {
@@ -7464,6 +7466,12 @@
     },
     "spriteNext": {
       "__id__": 150
+    },
+    "lbBoardSize": {
+      "__id__": 40
+    },
+    "lbBoardIndex": {
+      "__id__": 46
     },
     "_id": ""
   },
