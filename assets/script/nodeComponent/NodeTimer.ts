@@ -25,6 +25,14 @@ export class NodeTimer extends Component {
         this.lbTime.string = `${minutes < 10 ? '0' + minutes : minutes}:${seconds < 10 ? '0' + seconds : seconds}`;
     }
 
+    stop() {
+        this.unschedule(this.updateTime);
+    }
+
+    getTime() {
+        return this.time;
+    }
+
 }
 
 

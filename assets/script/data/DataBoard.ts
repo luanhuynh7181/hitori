@@ -83,23 +83,23 @@ export class DataBoard {
             for (let j = 0; j < this.board[i].length; j++) {
                 const value = this.board[i][j].value;
                 const hashRow = `${i}_${value}`;
-                if(!mapRow.has(hashRow)) {
+                if (!mapRow.has(hashRow)) {
                     mapRow.set(hashRow, []);
                 }
-                mapRow.get(hashRow).push({row: i, column: j});
+                mapRow.get(hashRow).push({ row: i, column: j });
                 const hashCol = `${j}_${value}`;
-                if(!mapCol.has(hashCol)) {
+                if (!mapCol.has(hashCol)) {
                     mapCol.set(hashCol, []);
                 }
-                mapCol.get(hashCol).push({row: i, column: j});
+                mapCol.get(hashCol).push({ row: i, column: j });
             }
         }
 
         for (let i = 0; i < this.board.length; i++) {
             for (let j = 0; j < this.board[i].length; j++) {
                 const value = this.board[i][j].value;
-                if(mapRow.get(`${i}_${value}`).length > 1 || mapCol.get(`${j}_${value}`).length > 1) {
-                    res.push({row: i, column: j});
+                if (mapRow.get(`${i}_${value}`).length > 1 || mapCol.get(`${j}_${value}`).length > 1) {
+                    res.push({ row: i, column: j });
                 }
             }
         }
@@ -124,6 +124,7 @@ export class DataBoard {
     }
 
     isWin(): boolean {
+        console.log("isWin", this.isValidAllCoords(), this.isvalidArea(), this.isValidNumber());
         if (!this.isvalidArea()) return false;
         if (!this.isValidAllCoords()) return false;
         if (!this.isValidNumber()) return false;

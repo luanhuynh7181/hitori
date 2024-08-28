@@ -17,6 +17,7 @@ import { NodeInnovation } from '../../nodeComponent/NodeInnovation';
 import { NodeTimer } from '../../nodeComponent/NodeTimer';
 import { PopupTut } from '../../nodeComponent/PopupTut';
 import { SceneGame } from '../SceneGame';
+import { PopupWin } from '../../nodeComponent/PopupWin';
 
 const { ccclass, property } = _decorator;
 
@@ -25,6 +26,8 @@ export class LayoutGame extends Component {
 
     @property(Prefab) cellPrefab: Prefab = null;
     @property(Prefab) popupTut: Prefab = null;
+    @property(Prefab) popupWin: Prefab = null;
+
     @property(Node) nodeBoardGame: Node = null;
     @property(Node) imgBorder: Node = null;
     @property(Node) imgTarget: Node = null;
@@ -32,7 +35,7 @@ export class LayoutGame extends Component {
     @property(Node) nodeBtn: Node = null;
     @property(Node) nodeCellUI: Node = null;
     @property(NodeInnovation) scriptInovation: NodeInnovation = null;
-    @property(NodeTimer) sctipTime: NodeTimer = null;
+    @property(NodeTimer) scriptTime: NodeTimer = null;
     @property(Sprite) spriteUndo: Sprite = null;
     @property(Sprite) spriteNext: Sprite = null;
     @property(Label) lbBoardSize: Label = null;
@@ -46,7 +49,7 @@ export class LayoutGame extends Component {
     transition: Transition = new Transition();
     boardInfo: BoardInfo = null;
     layoutTutorial: LayoutGameTut = null;
-
+    nodePopupWin: Node = null;
     onLoad() {
         this.toucher = new BoardMouse(
             this.nodeBoardGame,
@@ -93,7 +96,7 @@ export class LayoutGame extends Component {
         this.createUICell();
         this.addToHistory();
         this.scriptInovation.onShow(boardInfo);
-        this.sctipTime.onShow();
+        this.scriptTime.onShow();
     }
 
     preloadUICell(maxCell: number = 400) {
@@ -255,8 +258,20 @@ export class LayoutGame extends Component {
 
     checkWin() {
         if (this.dataBoard.isWin()) {
-            LocalStorage.cacheBoardFinished(this.boardInfo);
+            if (!this.nodePopupWin) {
+                this.nodePopupWin = instantiate(this.popupWin);
+                this.node.addChild(this.nodePopupWin);
+            }
+            this.nodePopupWin.getComponent(PopupWin).show();
+            this.scriptTime.stop();
+            LocalStorage.cacheBoardFinished(this.boardInfo, this.scriptTime.getTime());
+            this.clearDataAndUI();
+
         }
+    }
+
+    createPopupWin() {
+
     }
 
     onLeftClick(coords: Tcoords) {

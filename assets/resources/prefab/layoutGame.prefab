@@ -7437,6 +7437,10 @@
       "__uuid__": "c572363a-9d1f-48a9-98cd-077851434512",
       "__expectedType__": "cc.Prefab"
     },
+    "popupWin": {
+      "__uuid__": "3b31237f-8106-40da-aede-1708faaf9ab5",
+      "__expectedType__": "cc.Prefab"
+    },
     "nodeBoardGame": {
       "__id__": 2
     },
@@ -7458,7 +7462,7 @@
     "scriptInovation": {
       "__id__": 301
     },
-    "sctipTime": {
+    "scriptTime": {
       "__id__": 51
     },
     "spriteUndo": {

@@ -5,6 +5,11 @@ const { ccclass, property } = _decorator;
 
 @ccclass('PopupWin')
 export class PopupWin extends Component {
+
+    show() {
+        this.node.active = true;
+    }
+
     onClickBack() {
         this.node.active = false;
         director.emit(EVENT_TYPE.SWITCH_LAYOUT, { layout: GAME_LAYOUT.LOBBY });
