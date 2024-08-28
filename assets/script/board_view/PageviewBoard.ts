@@ -11,7 +11,7 @@ export class PageviewBoard extends Component {
 
     private packType: PACK_TYPE = 0;
     public size: number = 0;
-    private boards: BoardConfig[] = null;
+    public boards: BoardConfig[] = null;
     private pvItems: PageviewItem[] = [];
 
     setup(packType: PACK_TYPE, size: number, boards: BoardConfig[]) {

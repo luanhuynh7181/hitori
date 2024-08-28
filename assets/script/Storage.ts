@@ -32,8 +32,8 @@ export class _LocalStorage {
         return this.getItem(key) != null;
     }
 
-    isFinishAllBoardSize(boardSize: number): boolean {
-        for (let i = 0; i < boardSize; i++) {
+    isFinishAllBoardSize(boardSize: number, length: number): boolean {
+        for (let i = 0; i < length; i++) {
             const boardInfo: BoardInfo = { packType: PACK_TYPE.CLASSIC, boardSize, boardIndex: i };
             if (!this.isBoardFinished(boardInfo)) {
                 return false;

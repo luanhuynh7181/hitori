@@ -42,7 +42,7 @@ export class PageviewPack extends Component {
             const dot = this.dot[i];
             const page = this.pages[i];
             page.onShow();
-            dot.getComponent(PageviewDot).setup(LocalStorage.isFinishAllBoardSize(page.size));
+            dot.getComponent(PageviewDot).setup(LocalStorage.isFinishAllBoardSize(page.size, page.boards.length));
         }
     }
 
