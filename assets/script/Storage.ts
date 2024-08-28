@@ -15,12 +15,15 @@ export class _LocalStorage {
 
     }
 
-    getItem(key: string): string | null {
-        return this.data[key] || null;
+    loadData() {
+        const data = localStorage.getItem("data");
+        if (data) {
+            this.data = JSON.parse(data);
+        }
     }
 
-    setItem(key: string, value: string): void {
-        this.data[key] = value;
+    getItem(key: string): string | null {
+        return this.data[key] || null;
     }
 
     getKeyBoard(boardInfo: BoardInfo): string {
@@ -44,7 +47,8 @@ export class _LocalStorage {
 
     cacheBoardFinished(boardInfo: BoardInfo, timeFinish) {
         const key = this.getKeyBoard(boardInfo);
-        this.setItem(key, timeFinish);
+        this.data[key] = timeFinish;
+        localStorage.setItem("data", JSON.stringify(this.data));
     }
 
 }
