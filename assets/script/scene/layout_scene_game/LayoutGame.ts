@@ -46,8 +46,8 @@ export class LayoutGame extends Component {
     transition: Transition = new Transition();
     boardInfo: BoardInfo = null;
     layoutTutorial: LayoutGameTut = null;
+
     onLoad() {
-        console.log("onLoad");
         this.toucher = new BoardMouse(
             this.nodeBoardGame,
             this.cells,
@@ -84,7 +84,7 @@ export class LayoutGame extends Component {
 
     onShow(boardInfo: BoardInfo) {
         this.boardInfo = boardInfo;
-        this.clearDataAndUI();
+
         this.transition.runIn();
         const boardConfig: BoardConfig = DataConfig.getBoardConfig(boardInfo);
         this.updateLayoutBoard(boardConfig.data.length);
@@ -103,6 +103,8 @@ export class LayoutGame extends Component {
             this.nodeCellUI.addChild(node);
             this.poolUIcell.push(node);
             node.setPosition(pos);
+            const uiCell: UICell = node.getComponent(UICell);
+            uiCell.clean();
         }
     }
 
@@ -131,6 +133,7 @@ export class LayoutGame extends Component {
         for (const row of this.cells) {
             for (const cell of row) {
                 cell.node.setPosition(2000, 2000);
+                cell.clean();
             }
         }
         this.cells = [];
@@ -153,14 +156,13 @@ export class LayoutGame extends Component {
                 const node: Node = this.poolUIcell[uiCellIndex++];
                 const uiCell: UICell = node.getComponent(UICell);
                 const coords: Tcoords = { row: i, column: j };
-                uiCell.setup(coords, cell);
+                uiCell.setup(coords, cell, cellSize - padding);
                 uiRow.push(uiCell);
                 node.setPosition(posStart.x + j * cellSize, posStart.y - i * cellSize);
-                uiCell.updateSize(cellSize - padding);
             }
             this.cells.push(uiRow);
         }
-        // this.toucher.setup(this.cells, cellSize);
+        this.toucher.setup(this.cells, cellSize);
     }
 
     getCell(coords: Tcoords): UICell {
@@ -287,10 +289,10 @@ export class LayoutGame extends Component {
     onClickBack() {
         this.transition.runOut(() => {
             director.emit(EVENT_TYPE.SWITCH_LAYOUT, { layout: GAME_LAYOUT.LOBBY, data: null });
+            this.clearDataAndUI();
         });
 
     }
-
 
     onClickHelp() {
         const invalidCoords = this.dataBoard.getCoordsInvald();

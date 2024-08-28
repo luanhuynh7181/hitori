@@ -10,10 +10,12 @@ export class NodeTimer extends Component {
     }
 
     onShow() {
-        this.time = -1;
+        this.time = 0;
         this.updateTime();
         this.unschedule(this.updateTime);
-        this.schedule(this.updateTime, 1);
+        this.scheduleOnce(() => {
+            this.schedule(this.updateTime, 1);
+        }, 2);
     }
 
     updateTime() {

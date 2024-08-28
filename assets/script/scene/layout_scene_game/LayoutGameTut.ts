@@ -115,6 +115,7 @@ export class LayoutGameTut {
         this.popupTut.node.destroy();
         this.originLayoutGame.updateOrderTop(this.originLayoutGame.node);
         this.originLayoutGame.transition.runIn();
+        this.originLayoutGame.layoutTutorial = null;
     }
 
     showFinish() {

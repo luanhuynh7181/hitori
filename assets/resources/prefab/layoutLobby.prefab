@@ -139,7 +139,7 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 79.19990539550781,
+      "width": 107.32421875,
       "height": 25.2
     },
     "_anchorPoint": {
@@ -175,7 +175,7 @@
       "b": 56,
       "a": 255
     },
-    "_string": "version 1.0",
+    "_string": "Version 1.0",
     "_horizontalAlign": 1,
     "_verticalAlign": 1,
     "_actualFontSize": 20,
@@ -185,7 +185,7 @@
     "_overflow": 0,
     "_enableWrapText": true,
     "_font": {
-      "__uuid__": "5c52e742-4ffd-45fe-9151-c5c079f29f81",
+      "__uuid__": "5d200b2e-9a06-486f-837f-b45ad7307692",
       "__expectedType__": "cc.TTFFont"
     },
     "_isSystemFontUsed": false,

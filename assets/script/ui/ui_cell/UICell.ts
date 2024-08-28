@@ -18,17 +18,23 @@ export class UICell extends Component {
     private _coords: Tcoords = null;
     private _type: CELL_TYPE = null;
     private _priority: TCellPriority = null;
-    setup(coords: Tcoords, dataCell: IDataCell) {
+    setup(coords: Tcoords, dataCell: IDataCell, size: number) {
         this._dataCell = dataCell;
         this.uiCellAction = new UICellActionManager(this);
         this._coords = coords;
         this._type = CELL_TYPE.NONE_SHADE;
         this._priority = { ...TCellPriorityInit };
-
-        this.lbNumber.string = dataCell.value.toString();
         this.uiCellAction.doAction(UICellUnshade);
-        this.resetColor();
+        this.imgBg.getComponent(UITransform).width = size;
+        this.imgBg.getComponent(UITransform).height = size;
+        this.scheduleOnce(() => {
+            this.lbNumber.string = dataCell.value.toString();
+            this.lbNumber.fontSize = Math.floor(size * 1.4);
+        }, 0.4 + Math.random() * 0.5);
+    }
 
+    clean() {
+        this.lbNumber.string = "";
     }
 
     public get coords(): Tcoords {
@@ -49,12 +55,6 @@ export class UICell extends Component {
 
     public set priority(value: TCellPriority) {
         this._priority = value;
-    }
-
-    updateSize(size: number) {
-        this.imgBg.getComponent(UITransform).width = size;
-        this.imgBg.getComponent(UITransform).height = size;
-        this.lbNumber.fontSize = size * 1.4
     }
 
     updateUIByPriority() { // check priority and update UI compare with previous priority
@@ -81,11 +81,6 @@ export class UICell extends Component {
 
     showCellValidNumber() {
         //  const hex = Color.fromHEX(new Color(), "#FF0000");
-        // this.lbNumber.color = hex;
-    }
-
-    resetColor() {
-        // const hex = Color.fromHEX(new Color(), "#FFFFFF");
         // this.lbNumber.color = hex;
     }
 
