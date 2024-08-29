@@ -17,6 +17,7 @@ export const enum GAME_LAYOUT {
 export const enum EVENT_TYPE {
     SWITCH_LAYOUT = 1,
     ONCLICK_ITEM_BOARD = 2,
+    ON_CLICK_BUTTON = 3,
 }
 
 export enum PACK_TYPE {

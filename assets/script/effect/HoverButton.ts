@@ -1,4 +1,5 @@
-import { _decorator, Component, Node, tween, Tween, v3 } from 'cc';
+import { _decorator, AudioClip, AudioSource, Component, director, Node, resources, tween, Tween, v3 } from 'cc';
+import { BackgroundSound } from '../scene/sound/BackgroundSound';
 const { ccclass, property } = _decorator;
 
 @ccclass('HoverButton')
@@ -9,6 +10,7 @@ export class HoverButton extends Component {
     start() {
         this.node.on(Node.EventType.MOUSE_ENTER, this.onMouseEnter, this);
         this.node.on(Node.EventType.MOUSE_LEAVE, this.onMouseCancel, this);
+        this.node.on(Node.EventType.TOUCH_START, this.onTouchEnd, this);
         this.scaleOrg = this.node.scale.x;
         this.scaleTo = this.scaleOrg * 1.15;
     }
@@ -27,6 +29,10 @@ export class HoverButton extends Component {
         tween(node).to(this.scaleTime, { scale: v3(this.scaleOrg, this.scaleOrg, this.scaleOrg) }).
             tag(1).
             start()
+    }
+
+    onTouchEnd() {
+        BackgroundSound.instance.playClickButton();
     }
 }
 
