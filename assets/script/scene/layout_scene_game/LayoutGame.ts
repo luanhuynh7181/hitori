@@ -302,6 +302,10 @@ export class LayoutGame extends Component {
     }
 
     onClickBack() {
+        this.nodePopupWin = instantiate(this.popupWin);
+        this.node.addChild(this.nodePopupWin);
+        this.nodePopupWin.getComponent(PopupWin).show();
+        return;
         this.transition.runOut(() => {
             director.emit(EVENT_TYPE.SWITCH_LAYOUT, { layout: GAME_LAYOUT.LOBBY, data: null });
             this.clearDataAndUI();
@@ -329,7 +333,7 @@ export class LayoutGame extends Component {
         nodeTut.addChild(nodeGame);
         this.node.parent.addChild(nodeTut);
         const popupTut: PopupTut = nodeTut.getComponent(PopupTut);
-        this.layoutTutorial = new LayoutGameTut(popupTut, layoutGame, this.node);
+        this.layoutTutorial = new LayoutGameTut(popupTut, nodeGame, this.node);
         layoutGame.onShow({ packType: PACK_TYPE.CLASSIC, boardSize: 4, boardIndex: 0 });
         this.layoutTutorial.onResize(view.getVisibleSize(), this.nodeBoardGame);
         this.updateOrderTop(nodeTut);

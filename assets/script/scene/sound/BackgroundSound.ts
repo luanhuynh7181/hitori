@@ -4,6 +4,7 @@ const { ccclass, property } = _decorator;
 @ccclass('BackgroundSound')
 export class BackgroundSound extends Component {
     @property(AudioSource) clickButton: AudioSource = null;
+    @property(AudioSource) success: AudioSource = null;
     public static instance: BackgroundSound = null;
     onLoad() {
         BackgroundSound.instance = this;
@@ -14,6 +15,10 @@ export class BackgroundSound extends Component {
 
     playClickButton() {
         this.clickButton.play();
+    }
+
+    playSuccess() {
+        this.success.play();
     }
 
 }
