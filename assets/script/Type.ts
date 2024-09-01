@@ -17,6 +17,7 @@ export type TCellPriority = {
     isShaded: boolean;
     isFlag: boolean;
     isInvalidArea: boolean;
+    isHighlight: boolean;
     isNormal: boolean;
 }
 
@@ -25,6 +26,7 @@ export const TCellPriorityInit: TCellPriority = {
     isShaded: false,
     isFlag: false,
     isInvalidArea: false,
+    isHighlight: false,
     isNormal: false
 };
 

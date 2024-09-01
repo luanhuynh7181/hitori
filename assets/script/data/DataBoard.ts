@@ -130,7 +130,7 @@ export class DataBoard {
         return true;
     }
 
-    getNumbersValid(): Tcoords[] {
+    getNumbersInvalid(): Tcoords[] {
         const map = new Map<string, number>();
         for (let i = 0; i < this.board.length; i++) {
             for (let j = 0; j < this.board[i].length; j++) {
@@ -148,7 +148,7 @@ export class DataBoard {
                 const value = this.board[i][j].value;
                 const hashCol = `row_${i}_${value}`;
                 const hashRow = `col_${j}_${value}`;
-                if (map.get(hashRow) === 1 && map.get(hashCol) === 1) {
+                if (map.get(hashRow) === 2 || map.get(hashCol) === 2) {
                     res.push({ row: i, column: j });
                 }
             }

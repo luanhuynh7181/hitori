@@ -90,8 +90,6 @@ export class LayoutGame extends Component {
 
     onShow(boardInfo: BoardInfo) {
         this.boardInfo = boardInfo;
-
-        this.transition.runIn();
         const boardConfig: BoardConfig = DataConfig.getBoardConfig(boardInfo);
         this.updateLayoutBoard(boardConfig.data.length);
         this.dataBoard.createBoard(boardConfig.data);
@@ -99,6 +97,13 @@ export class LayoutGame extends Component {
         this.createUICell();
         this.addToHistory();
         this.scriptTime.onShow();
+        this.transition.runIn(
+            () => {
+                if (LocalStorage.isFirstTimePlay()) {
+                    this.onClickTut();
+                }
+            }
+        );
     }
 
     preloadUICell(maxCell: number = 400) {
@@ -331,8 +336,12 @@ export class LayoutGame extends Component {
         this.layoutTutorial = new LayoutGameTut(popupTut, nodeGame, this.node);
         layoutGame.onShow({ packType: PACK_TYPE.CLASSIC, boardSize: 4, boardIndex: 0 });
         this.layoutTutorial.onResize(view.getVisibleSize(), this.nodeBoardGame);
-        this.updateOrderTop(nodeTut);
-        popupTut.onShow();
+        this.scriptTime.stop();
+        this.transition.runOut(() => {
+            this.updateOrderTop(nodeTut);
+            popupTut.onShow();
+        }, 0, [this.nodeBoardGame]);
+
 
     }
 
@@ -342,10 +351,10 @@ export class LayoutGame extends Component {
     }
 
     onWatchedAds() {
-        const numbersValid = this.dataBoard.getNumbersValid();
+        const numbersValid = this.dataBoard.getNumbersInvalid();
         for (const coords of numbersValid) {
             const cell = this.getCell(coords);
-            cell.priority.isFlag = true;
+            cell.priority.isHighlight = true;
             cell.updateUIByPriority();
         }
     }

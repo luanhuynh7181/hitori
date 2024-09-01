@@ -9,7 +9,6 @@ export class LayoutGameTut {
     constructor(private popupTut: PopupTut, private node: Node, private originNode: Node) {
         popupTut.setCbNextTut(this.onNextTutorial.bind(this));
         popupTut.setCbExitTut(this.onClickExit.bind(this));
-        this.onNextTutorial(TUT_STEP.RULE_TARGET);
     }
 
     onResize(visibleSize: math.Size, nodeBoardGame: Node) {
@@ -66,6 +65,15 @@ export class LayoutGameTut {
 
     showFirstRule() {
         this.popupTut.showFirstRule();
+        // this.popupTut.showInvalidCoords();
+        // const layerGame: LayoutGame = this.getLayoutGame();
+        // const data: IDataCell[][] = layerGame.dataBoard.board;
+        // const coords = layerGame.dataBoard.getNumbersInvalid();
+        // for (const coord of coords) {
+        //     const cell = layerGame.getCell(coord);
+        //     cell.priority.isInvalidCoords = true;
+        //     cell.updateUIByPriority();
+        // }
     }
 
     showInvalidCoords() {
@@ -119,6 +127,7 @@ export class LayoutGameTut {
         const layerGame: LayoutGame = this.originNode.getComponent(LayoutGame);
         layerGame.updateOrderTop(this.originNode);
         layerGame.transition.runIn();
+        layerGame.scriptTime.resume();
         layerGame.layoutTutorial = null;
     }
 

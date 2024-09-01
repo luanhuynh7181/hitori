@@ -24,10 +24,13 @@ export class PopupTut extends Component {
         this.transition
             .addTransition(this.nodePopup, -30, 0, 0)
         this.nodePopup.setPosition(-1000, 0);
+        this.nodePopup.active = false;
     }
 
     onShow() {
         this.maxStep = this.nodeLabel.children.length - 1;
+        this.showFirstRule();
+        this.nodePopup.active = true;
     }
 
     onResize(visibleSize: math.Size) {
@@ -65,7 +68,7 @@ export class PopupTut extends Component {
 
     showFirstRule() {
         this.step = 0;
-        this.updateSizePopup(new math.Size(420, 110));
+        this.updateSizePopup(new math.Size(380, 150));
         this.transition.runIn();
     }
 
@@ -75,17 +78,17 @@ export class PopupTut extends Component {
     }
 
     showInvalidArea() {
-        this.updateSizePopup(new math.Size(320, 150));
+        this.updateSizePopup(new math.Size(340, 170));
         this.transition.runIn();
     }
 
     showMarkedCell() {
-        this.updateSizePopup(new math.Size(310, 110));
+        this.updateSizePopup(new math.Size(320, 110));
         this.transition.runIn();
     }
 
     showFinish() {
-        this.updateSizePopup(new math.Size(300, 110));
+        this.updateSizePopup(new math.Size(320, 110));
         this.transition.runIn();
     }
 

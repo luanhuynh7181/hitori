@@ -1,7 +1,7 @@
 import { _decorator, Color, Component, EventTouch, instantiate, Label, Node, Prefab, Sprite, UITransform, Vec2 } from 'cc';
 import { IDataCell } from '../../data/DataCell';
 import { UICellActionManager } from './UICellActionManager';
-import { UICellFlag, UICellInvalidArea, UICellInvalidCoord, UICellShaded, UICellUnshade } from './UICellType';
+import { UICellFlag, UICellHighLight, UICellInvalidArea, UICellInvalidCoord, UICellShaded, UICellUnshade } from './UICellType';
 import { CELL_TYPE } from '../../Enum';
 import { TCellPriority, TCellPriorityInit, Tcoords } from '../../Type';
 
@@ -74,6 +74,11 @@ export class UICell extends Component {
         }
         if (priority.isFlag) {
             this.uiCellAction.doAction(UICellFlag);
+            return;
+        }
+
+        if (priority.isHighlight) {
+            this.uiCellAction.doAction(UICellHighLight);
             return;
         }
         this.uiCellAction.doAction(UICellUnshade);

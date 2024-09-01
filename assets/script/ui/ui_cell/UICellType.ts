@@ -42,7 +42,7 @@ export class UICellInvalidArea extends IUICellAction {
     }
 }
 
-export class UICellInvalidNumber extends IUICellAction {
+export class UICellHighLight extends IUICellAction {
     execute(cell: UICell): void {
         cell.updateStyle("#3177A1", "#FFFFFF");
     }

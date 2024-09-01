@@ -21,12 +21,13 @@ export class Transition {
         node.orgPos = node.getPosition();
     }
 
-    public runIn() {
+    public runIn(callback?: () => void) {
+        let timeOut = 0;
         for (const tran of this.transition) {
             Tween.stopAllByTarget(tran.node);
             tran.node.setPosition(tran.node.orgPos.x + tran.deltaX, tran.node.orgPos.y + tran.deltaY);
             tran.node.getComponent(UIOpacity).opacity = 0;
-
+            timeOut = Math.max(timeOut, tran.duration + tran.delay);
             tween(tran.node)
                 .delay(tran.delay)
                 .to(tran.duration, { position: tran.node.orgPos }, { easing: "backInOut" })
@@ -36,13 +37,16 @@ export class Transition {
                 .delay(tran.delay)
                 .to(tran.duration, { opacity: 255 })
                 .start();
-
         }
+        setTimeout(() => {
+            callback && callback();
+        }, timeOut * 1000);
     }
 
-    public runOut(callback?: () => void, timeLoad: number = 0) {
+    public runOut(callback?: () => void, timeLoad: number = 0, exceptNode: Node[] = []) {
         let timeOut = 0;
         for (const tran of this.transition) {
+            if (exceptNode.includes(tran.node)) continue;
             timeOut = Math.max(timeOut, tran.duration + tran.delay);
             Tween.stopAllByTarget(tran.node);
             tran.node.setPosition(tran.node.orgPos);

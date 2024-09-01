@@ -29,6 +29,10 @@ export class NodeTimer extends Component {
         this.unschedule(this.updateTime);
     }
 
+    resume() {
+        this.schedule(this.updateTime, 1);
+    }
+
     getTime() {
         return this.time;
     }

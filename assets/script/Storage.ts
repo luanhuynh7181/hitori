@@ -1,3 +1,4 @@
+import CrazySDK from "../CrazySDK/CrazySDK";
 import { PACK_TYPE } from "./Enum";
 import { BoardInfo } from "./Type";
 
@@ -16,13 +17,23 @@ export class _LocalStorage {
     }
 
     loadData() {
-        const data = localStorage.getItem("data");
+        const data = this.getItem("data");
         if (data) {
             this.data = JSON.parse(data);
         }
     }
 
-    getItem(key: string): string | null {
+    getItem(key: string): any {
+        return localStorage.getItem(key);
+        // return CrazySDK.data.getItem(key);;
+    }
+
+    setItem(key: string, value: string) {
+        // CrazySDK.data.setItem(key, value);
+        localStorage.setItem(key, value);
+    }
+
+    getData(key: string): string | null {
         return this.data[key] || null;
     }
 
@@ -32,7 +43,7 @@ export class _LocalStorage {
 
     isBoardFinished(boardInfo: BoardInfo): boolean {
         const key = this.getKeyBoard(boardInfo);
-        return this.getItem(key) != null;
+        return this.getData(key) != null;
     }
 
     isFinishAllBoardSize(boardSize: number, length: number): boolean {
@@ -48,7 +59,14 @@ export class _LocalStorage {
     cacheBoardFinished(boardInfo: BoardInfo, timeFinish) {
         const key = this.getKeyBoard(boardInfo);
         this.data[key] = timeFinish;
-        localStorage.setItem("data", JSON.stringify(this.data));
+        this.setItem("data", JSON.stringify(this.data));
+    }
+
+    isFirstTimePlay() {
+        const key = "first_time_play12";
+        const b = this.getItem(key) == null;
+        this.setItem(key, "1");
+        return b;
     }
 
 }
