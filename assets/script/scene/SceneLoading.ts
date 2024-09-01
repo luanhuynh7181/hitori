@@ -4,6 +4,7 @@ import PackConfig from '../board/PackConfig';
 import DataConfig from '../board/DataConfig';
 import { PACK_TYPE } from '../Enum';
 import { LocalStorage } from '../Storage';
+import CrazySDK from '../../CrazySDK/CrazySDK';
 const { ccclass, property } = _decorator;
 
 @ccclass('SceneLoading')
@@ -13,6 +14,8 @@ export class SceneLoading extends Component {
 
     async start() {
         LocalStorage.loadData();
+        this.setLoadingProgress(1);
+        await CrazySDK.init();
         this.setLoadingProgress(2);
         await this.loadSceneGame();
         this.setLoadingProgress(3);

@@ -13,11 +13,11 @@ import { EVENT_TYPE, GAME_LAYOUT, PACK_TYPE } from '../../Enum';
 import { Transition } from '../../effect/Transition';
 import { LocalStorage } from '../../Storage';
 import { LayoutGameTut } from './LayoutGameTut';
-import { NodeInnovation } from '../../nodeComponent/NodeInnovation';
 import { NodeTimer } from '../../nodeComponent/NodeTimer';
 import { PopupTut } from '../../nodeComponent/PopupTut';
 import { SceneGame } from '../SceneGame';
 import { PopupWin } from '../../nodeComponent/PopupWin';
+import { PopupAds } from '../../nodeComponent/PopupAds';
 
 const { ccclass, property } = _decorator;
 
@@ -27,6 +27,7 @@ export class LayoutGame extends Component {
     @property(Prefab) cellPrefab: Prefab = null;
     @property(Prefab) popupTut: Prefab = null;
     @property(Prefab) popupWin: Prefab = null;
+    @property(Prefab) popupAds: Prefab = null;
 
     @property(Node) nodeBoardGame: Node = null;
     @property(Node) imgBorder: Node = null;
@@ -34,7 +35,6 @@ export class LayoutGame extends Component {
     @property(Node) nodeLeft: Node = null;
     @property(Node) nodeBtn: Node = null;
     @property(Node) nodeCellUI: Node = null;
-    @property(NodeInnovation) scriptInovation: NodeInnovation = null;
     @property(NodeTimer) scriptTime: NodeTimer = null;
     @property(Sprite) spriteUndo: Sprite = null;
     @property(Sprite) spriteNext: Sprite = null;
@@ -50,6 +50,8 @@ export class LayoutGame extends Component {
     boardInfo: BoardInfo = null;
     layoutTutorial: LayoutGameTut = null;
     nodePopupWin: Node = null;
+    nodePopupAds: Node = null;
+
     onLoad() {
         this.toucher = new BoardMouse(
             this.nodeBoardGame,
@@ -61,6 +63,7 @@ export class LayoutGame extends Component {
 
         this.preloadUICell();
         this.addTransition();
+        director.on(EVENT_TYPE.FINISH_WATCH_ADS, this.onWatchedAds, this);
     }
 
     onResize(designeResolution: math.Size, visibleSize: math.Size) {
@@ -95,7 +98,6 @@ export class LayoutGame extends Component {
         this.updateInfoBoard();
         this.createUICell();
         this.addToHistory();
-        this.scriptInovation.onShow(boardInfo);
         this.scriptTime.onShow();
     }
 
@@ -284,10 +286,6 @@ export class LayoutGame extends Component {
         this.onChangeShade(coords);
     }
 
-    showValidNumber() {
-        // this.dataBoard.showValidNumber();
-    }
-
     onRightClick(coords: Tcoords) {
         const cell: UICell = this.getCell(coords);
         if (cell.priority.isInvalidArea) return;
@@ -302,10 +300,6 @@ export class LayoutGame extends Component {
     }
 
     onClickBack() {
-        this.nodePopupWin = instantiate(this.popupWin);
-        this.node.addChild(this.nodePopupWin);
-        this.nodePopupWin.getComponent(PopupWin).show();
-        return;
         this.transition.runOut(() => {
             director.emit(EVENT_TYPE.SWITCH_LAYOUT, { layout: GAME_LAYOUT.LOBBY, data: null });
             this.clearDataAndUI();
@@ -314,11 +308,12 @@ export class LayoutGame extends Component {
     }
 
     onClickHelp() {
-        const invalidCoords = this.dataBoard.getCoordsInvald();
-        for (const coords of invalidCoords) {
-            const cell: UICell = this.getCell(coords);
-            cell.showCellValidNumber();
+        if (!this.nodePopupAds) {
+            this.nodePopupAds = instantiate(this.popupAds);
+            this.node.addChild(this.nodePopupAds);
         }
+        this.nodePopupAds.getComponent(PopupAds).show();
+        this.scriptTime.stop();
     }
 
     onClickTut() {
@@ -344,6 +339,15 @@ export class LayoutGame extends Component {
     updateOrderTop(node: Node) {
         const scene = director.getScene();
         scene.getChildByName("SceneGame").getComponent(SceneGame).setOrderOnTop(node);
+    }
+
+    onWatchedAds() {
+        const numbersValid = this.dataBoard.getNumbersValid();
+        for (const coords of numbersValid) {
+            const cell = this.getCell(coords);
+            cell.priority.isFlag = true;
+            cell.updateUIByPriority();
+        }
     }
 
 }

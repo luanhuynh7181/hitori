@@ -106,7 +106,7 @@ export class DataBoard {
         return res;
     }
 
-    isValidNumber(): boolean {
+    isValidAllNumber(): boolean {
         const map = new Map<string, boolean>();
         for (let i = 0; i < this.board.length; i++) {
             for (let j = 0; j < this.board[i].length; j++) {
@@ -124,10 +124,35 @@ export class DataBoard {
     }
 
     isWin(): boolean {
-        console.log("isWin", this.isValidAllCoords(), this.isvalidArea(), this.isValidNumber());
         if (!this.isvalidArea()) return false;
         if (!this.isValidAllCoords()) return false;
-        if (!this.isValidNumber()) return false;
+        if (!this.isValidAllNumber()) return false;
         return true;
+    }
+
+    getNumbersValid(): Tcoords[] {
+        const map = new Map<string, number>();
+        for (let i = 0; i < this.board.length; i++) {
+            for (let j = 0; j < this.board[i].length; j++) {
+                const value = this.board[i][j].value;
+                const hashCol = `row_${i}_${value}`;
+                const hashRow = `col_${j}_${value}`;
+                map.set(hashRow, map.get(hashRow) ? 2 : 1);
+                map.set(hashCol, map.get(hashCol) ? 2 : 1);
+            }
+        }
+
+        const res: Tcoords[] = [];
+        for (let i = 0; i < this.board.length; i++) {
+            for (let j = 0; j < this.board[i].length; j++) {
+                const value = this.board[i][j].value;
+                const hashCol = `row_${i}_${value}`;
+                const hashRow = `col_${j}_${value}`;
+                if (map.get(hashRow) === 1 && map.get(hashCol) === 1) {
+                    res.push({ row: i, column: j });
+                }
+            }
+        }
+        return res;
     }
 }
