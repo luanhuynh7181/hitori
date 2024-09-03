@@ -1,4 +1,5 @@
 import CrazySDK from "../CrazySDK/CrazySDK";
+import { GAME_ANALYTICS } from "../GameAnalytics/GameAnalytics";
 import { PACK_TYPE } from "./Enum";
 import { BoardInfo } from "./Type";
 
@@ -56,9 +57,10 @@ export class _LocalStorage {
         return true;
     }
 
-    cacheBoardFinished(boardInfo: BoardInfo, timeFinish) {
+    cacheBoardFinished(boardInfo: BoardInfo, timeFinish: number) {
         const key = this.getKeyBoard(boardInfo);
         this.data[key] = timeFinish;
+        GAME_ANALYTICS.trackTimeFinishBoard(boardInfo, timeFinish);
         this.setItem("data", JSON.stringify(this.data));
     }
 

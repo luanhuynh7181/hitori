@@ -5,6 +5,7 @@ import { PopupTut } from '../../nodeComponent/PopupTut';
 import { UICell } from '../../ui/ui_cell/UICell';
 import { TCellPriorityInit, Tcoords } from '../../Type';
 import { IDataCell } from '../../data/DataCell';
+import { GAME_ANALYTICS } from '../../../GameAnalytics/GameAnalytics';
 export class LayoutGameTut {
     constructor(private popupTut: PopupTut, private node: Node, private originNode: Node) {
         popupTut.setCbNextTut(this.onNextTutorial.bind(this));
@@ -22,6 +23,7 @@ export class LayoutGameTut {
 
     onNextTutorial(step: number) {
         this.resetUICell();
+        GAME_ANALYTICS.trackTutorialStep(step);
         switch (step) {
             case TUT_STEP.RULE_TARGET:
                 this.showFirstRule();

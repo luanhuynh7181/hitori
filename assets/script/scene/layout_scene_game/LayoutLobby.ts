@@ -38,7 +38,6 @@ export class LayoutLobby extends Component {
     }
 
     onShow(data: any) {
-        console.log("LayoutLobby onShow", data);
         const { total, finished } = Utility.getBoardFinishInfo();
         this.lbBoardFinish.string = `${finished}/${total}`;
         setTimeout(() => {

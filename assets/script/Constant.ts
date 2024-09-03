@@ -1,5 +1,8 @@
 
 
+
+export const VERSION = '1';
+
 export const TIME = {
     MARK_CELL_VALID: 0.5,
 }

@@ -5,6 +5,7 @@ import DataConfig from '../board/DataConfig';
 import { PACK_TYPE } from '../Enum';
 import { LocalStorage } from '../Storage';
 import CrazySDK from '../../CrazySDK/CrazySDK';
+import { GAME_ANALYTICS } from '../../GameAnalytics/GameAnalytics';
 const { ccclass, property } = _decorator;
 
 @ccclass('SceneLoading')
@@ -14,8 +15,10 @@ export class SceneLoading extends Component {
 
     async start() {
         LocalStorage.loadData();
-        this.setLoadingProgress(1);
+        this.setLoadingProgress(0);
         await CrazySDK.init();
+        this.setLoadingProgress(1);
+        await this.loadGameAnalytics();
         this.setLoadingProgress(2);
         await this.loadSceneGame();
         this.setLoadingProgress(3);
@@ -23,6 +26,13 @@ export class SceneLoading extends Component {
         director.loadScene("SceneGame");
 
     };
+
+    async loadGameAnalytics() {
+        const token = await CrazySDK.user.getUserToken();
+        const data = JSON.parse(atob(token.split('.')[1]));
+        const userId = data.userId;
+        GAME_ANALYTICS.init(userId);
+    }
 
     async loadConfig() {
         const boardData = [

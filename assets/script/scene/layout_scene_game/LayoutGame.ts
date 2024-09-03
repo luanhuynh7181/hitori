@@ -18,6 +18,7 @@ import { PopupTut } from '../../nodeComponent/PopupTut';
 import { SceneGame } from '../SceneGame';
 import { PopupWin } from '../../nodeComponent/PopupWin';
 import { PopupAds } from '../../nodeComponent/PopupAds';
+import { GAME_ANALYTICS } from '../../../GameAnalytics/GameAnalytics';
 
 const { ccclass, property } = _decorator;
 
@@ -313,6 +314,7 @@ export class LayoutGame extends Component {
     }
 
     onClickHelp() {
+        GAME_ANALYTICS.trackClickHint();
         if (!this.nodePopupAds) {
             this.nodePopupAds = instantiate(this.popupAds);
             this.node.addChild(this.nodePopupAds);
@@ -351,6 +353,7 @@ export class LayoutGame extends Component {
     }
 
     onWatchedAds() {
+        GAME_ANALYTICS.trackWatchRewardAd();
         const numbersValid = this.dataBoard.getNumbersInvalid();
         for (const coords of numbersValid) {
             const cell = this.getCell(coords);
