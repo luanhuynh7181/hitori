@@ -58,6 +58,7 @@ export class UICell extends Component {
     }
 
     updateUIByPriority() { // check priority and update UI compare with previous priority
+        console.log("updateUIByPriority");
         const priority: TCellPriority = this._priority;
         if (priority.isInvalidCoords) {
             this.uiCellAction.doAction(UICellInvalidCoord);

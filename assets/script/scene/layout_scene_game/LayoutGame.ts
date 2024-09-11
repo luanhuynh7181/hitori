@@ -59,7 +59,8 @@ export class LayoutGame extends Component {
             this.cells,
             this.imgTarget,
             this.onLeftClick.bind(this),
-            this.onRightClick.bind(this)
+            this.onRightClick.bind(this),
+            this.onClick.bind(this)
         );
 
         this.preloadUICell();
@@ -180,19 +181,9 @@ export class LayoutGame extends Component {
         return this.cells[coords.row][coords.column];
     }
 
-    onChangeShade(coords: Tcoords) {
+    onChangeStateBoard(coords: Tcoords) {
         this.updatePriorityValidCoords(coords);
         this.updatePriorityValidArea();
-        this.updateUIAllCell();
-        this.addToHistory();
-        this.checkWin();
-    }
-
-    onChangeFlag(coords: Tcoords, isChangeShade: boolean) {
-        if (isChangeShade) {
-            this.updatePriorityValidCoords(coords);
-            return;
-        }
         this.updateUIAllCell();
         this.addToHistory();
         this.checkWin();
@@ -285,24 +276,39 @@ export class LayoutGame extends Component {
     onLeftClick(coords: Tcoords) {
         const cell: UICell = this.getCell(coords);
         cell.dataCell.isShaded = !cell.dataCell.isShaded;
-        if (!cell.dataCell.isShaded) {
-            cell.priority.isInvalidCoords = false;
-        }
         cell.priority.isFlag = false;
-        this.onChangeShade(coords);
+        this.checkInvalid(cell);
+        this.onChangeStateBoard(coords);
     }
 
     onRightClick(coords: Tcoords) {
         const cell: UICell = this.getCell(coords);
-        if (cell.priority.isInvalidArea) return;
-        if (cell.dataCell.isShaded) return;
         cell.priority.isFlag = !cell.priority.isFlag;
-        const isShaded = cell.dataCell.isShaded;
+        cell.dataCell.isShaded = false;
+        this.checkInvalid(cell);
+        this.onChangeStateBoard(coords);
+    }
+
+    checkInvalid(cell: UICell) {
         if (!cell.priority.isFlag) {
             cell.priority.isInvalidArea = false;
         }
-        cell.dataCell.isShaded = false;
-        this.onChangeFlag(coords, isShaded);
+        if (!cell.dataCell.isShaded) {
+            cell.priority.isInvalidCoords = false;
+        }
+    }
+
+    onClick(coords: Tcoords) {
+        const cell: UICell = this.getCell(coords);
+        if (cell.dataCell.isShaded) {
+            this.onRightClick(coords);
+            return;
+        }
+        if (cell.priority.isFlag) {
+            this.onRightClick(coords);
+            return;
+        }
+        this.onLeftClick(coords);
     }
 
     onClickBack() {

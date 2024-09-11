@@ -1,5 +1,6 @@
 import CrazySDK from "../CrazySDK/CrazySDK";
 import { GAME_ANALYTICS } from "../GameAnalytics/GameAnalytics";
+import { isModeDev } from "./Constant";
 import { PACK_TYPE } from "./Enum";
 import { BoardInfo } from "./Type";
 
@@ -25,13 +26,19 @@ export class _LocalStorage {
     }
 
     getItem(key: string): any {
-        return localStorage.getItem(key);
-        // return CrazySDK.data.getItem(key);;
+        if (isModeDev) {
+            return localStorage.getItem(key);
+        }
+        return CrazySDK.data.getItem(key);;
     }
 
     setItem(key: string, value: string) {
-        // CrazySDK.data.setItem(key, value);
-        localStorage.setItem(key, value);
+        if (isModeDev) {
+            localStorage.setItem(key, value);
+            return;
+        }
+        CrazySDK.data.setItem(key, value);
+
     }
 
     getData(key: string): string | null {
