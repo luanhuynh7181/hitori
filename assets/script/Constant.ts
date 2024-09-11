@@ -12,4 +12,4 @@ export const DESIGN_SIZE = {
     HEIGHT: 615
 }
 
-export const isModeDev = true;
+export const isModeDev = false;

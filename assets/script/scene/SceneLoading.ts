@@ -7,6 +7,7 @@ import { LocalStorage } from '../Storage';
 import CrazySDK from '../../CrazySDK/CrazySDK';
 import { GAME_ANALYTICS } from '../../GameAnalytics/GameAnalytics';
 import { isModeDev } from '../Constant';
+import { Utility } from '../Utility';
 const { ccclass, property } = _decorator;
 
 @ccclass('SceneLoading')
@@ -17,23 +18,22 @@ export class SceneLoading extends Component {
 
     onLoad() {
         view.setResolutionPolicy(ResolutionPolicy.FIXED_HEIGHT);
-        this.onResize();
         window.addEventListener('resize', this.onResize);
     }
 
     onResize() {
-        const designSize = view.getDesignResolutionSize();
-        const viewSize = view.getVisibleSize();
-        let scale = viewSize.width / designSize.width;
-        this.nodeBg.setScale(scale, scale);
+        const scale = Utility.getScaleScreen();
+        this.nodeBg?.setScale(scale, scale);
         if (isModeDev) return;
         view.setCanvasSize(window.innerWidth, window.innerHeight);
     }
 
     async start() {
-        LocalStorage.loadData();
+
+        this.onResize();
         this.setLoadingProgress(0);
         await CrazySDK.init();
+        LocalStorage.loadData();
         this.setLoadingProgress(1);
         await this.loadGameAnalytics();
         this.setLoadingProgress(2);
@@ -127,7 +127,6 @@ export class SceneLoading extends Component {
     }
 
     onDestroy() {
-        console.log("onDestroy---------------");
         window.removeEventListener('resize', this.onResize);
     }
 

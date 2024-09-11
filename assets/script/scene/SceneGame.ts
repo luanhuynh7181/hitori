@@ -4,6 +4,7 @@ import { LayoutLobby } from './layout_scene_game/LayoutLobby';
 import { LayoutGame } from './layout_scene_game/LayoutGame';
 import { EVENT_TYPE, GAME_LAYOUT } from '../Enum';
 import { DESIGN_SIZE, isModeDev } from '../Constant';
+import { Utility } from '../Utility';
 const { ccclass, property } = _decorator;
 
 @ccclass('SceneGame')
@@ -32,7 +33,7 @@ export class SceneGame extends Component {
         }
         const designSize = view.getDesignResolutionSize();
         const viewSize = view.getVisibleSize();
-        let scale = viewSize.width / designSize.width;
+        let scale = Utility.getScaleScreen();
         this.background.setScale(scale, scale);
         this.layoutLobby.onResize(designSize, viewSize);
         this.layoutGame.onResize(designSize, viewSize);

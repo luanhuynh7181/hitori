@@ -1,4 +1,4 @@
-import { Sprite, Node, Color } from "cc";
+import { Sprite, Node, Color, view } from "cc";
 import DataConfig from "./board/DataConfig";
 import PackConfig from "./board/PackConfig";
 import { PACK_TYPE } from "./Enum";
@@ -63,6 +63,13 @@ export class Utility {
     public static updateColorSprite(sprite: Sprite, color: string) {
         const hex = Color.fromHEX(new Color(), color);
         sprite.color = hex;
+    }
+
+    public static getScaleScreen(): number {
+        const designSize = view.getDesignResolutionSize();
+        const viewSize = view.getVisibleSize();
+        let scale = viewSize.width / designSize.width;
+        return scale;
     }
 
 }
