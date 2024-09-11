@@ -1981,7 +1981,7 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 375,
+      "width": 380,
       "height": 2
     },
     "_anchorPoint": {
@@ -4342,7 +4342,7 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 295,
+      "width": 380,
       "height": 2
     },
     "_anchorPoint": {
@@ -7396,6 +7396,12 @@
     },
     "lbBoardIndex": {
       "__id__": 46
+    },
+    "lbTut1": {
+      "__id__": 171
+    },
+    "lbTut2": {
+      "__id__": 69
     },
     "_id": ""
   },

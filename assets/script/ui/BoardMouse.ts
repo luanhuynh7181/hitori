@@ -12,8 +12,6 @@ export class BoardMouse {
         private onRightClick: (coords: Tcoords) => void,
         private onClick: (coords: Tcoords) => void
     ) {
-        this.addTouchListener(node);
-        return;
         if (sys.platform === sys.Platform.MOBILE_BROWSER) {
             this.addTouchListener(node);
             return;

@@ -1,4 +1,4 @@
-import { _decorator, Component, Label, math, Node, Sprite, UITransform, Vec3, Widget } from 'cc';
+import { _decorator, Component, Label, math, Node, Sprite, sys, UITransform, Vec3, Widget } from 'cc';
 import { Transition } from '../effect/Transition';
 import { Utility } from '../Utility';
 const { ccclass, property } = _decorator;
@@ -14,6 +14,8 @@ export class PopupTut extends Component {
     @property(Node) btnPrev: Node = null;
     @property(Sprite) bgNext: Sprite = null;
     @property(Sprite) bgPrev: Sprite = null;
+    @property([Node]) nodeMobile: Node[] = [];
+    @property([Node]) nodeDesktop: Node[] = [];
     private halfButton: number = 25;
     private cbNextTut: Function = null;
     private cbExitTut: Function = null;
@@ -25,6 +27,13 @@ export class PopupTut extends Component {
             .addTransition(this.nodePopup, -30, 0, 0)
         this.nodePopup.setPosition(-1000, 0);
         this.nodePopup.active = false;
+        const isDesktop = sys.platform === sys.Platform.DESKTOP_BROWSER;
+        for (let node of this.nodeMobile) {
+            node.active = !isDesktop;
+        }
+        for (let node of this.nodeDesktop) {
+            node.active = isDesktop;
+        }
     }
 
     onShow() {

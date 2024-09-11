@@ -1,4 +1,4 @@
-import { _decorator, clamp, Component, director, EventTouch, instantiate, Label, math, Node, Prefab, Sprite, UI, UITransform, v3, Vec2, Vec3, view, Widget } from 'cc';
+import { _decorator, clamp, Component, director, EventTouch, instantiate, Label, math, Node, Prefab, Sprite, sys, UI, UITransform, v3, Vec2, Vec3, view, Widget } from 'cc';
 import { DataBoard } from '../../data/DataBoard';
 import { BoardMouse } from '../../ui/BoardMouse';
 import { UICell } from '../../ui/ui_cell/UICell';
@@ -42,6 +42,9 @@ export class LayoutGame extends Component {
     @property(Label) lbBoardSize: Label = null;
     @property(Label) lbBoardIndex: Label = null;
 
+    @property(Label) lbTut1: Label = null;
+    @property(Label) lbTut2: Label = null;
+
     poolUIcell: Node[] = [];
     dataBoard: DataBoard = new DataBoard();
     toucher: BoardMouse = null;
@@ -66,6 +69,18 @@ export class LayoutGame extends Component {
         this.preloadUICell();
         this.addTransition();
         director.on(EVENT_TYPE.FINISH_WATCH_ADS, this.onWatchedAds, this);
+        this.updateText();
+    }
+
+    updateText() {
+        if (sys.platform === sys.Platform.MOBILE_BROWSER || true) {
+            this.lbTut1.string = "Single click to shade";
+            this.lbTut2.string = "Double click mark as valid";
+            this.lbTut1.node.parent.getComponent(UITransform).width = 400;
+            this.lbTut2.node.parent.getComponent(UITransform).width = 400;
+            return;
+
+        }
     }
 
     onResize(designeResolution: math.Size, visibleSize: math.Size) {
