@@ -33,6 +33,7 @@ export class SceneLoading extends Component {
         this.onResize();
         this.setLoadingProgress(0);
         await CrazySDK.init();
+        CrazySDK.game.loadingStart();
         LocalStorage.loadData();
         this.setLoadingProgress(1);
         await this.loadGameAnalytics();
@@ -40,6 +41,7 @@ export class SceneLoading extends Component {
         await this.loadSceneGame();
         this.setLoadingProgress(3);
         await this.loadConfig();
+        CrazySDK.game.loadingStop();
         director.loadScene("SceneGame");
 
     };

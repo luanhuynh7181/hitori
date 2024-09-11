@@ -19,6 +19,7 @@ import { SceneGame } from '../SceneGame';
 import { PopupWin } from '../../nodeComponent/PopupWin';
 import { PopupAds } from '../../nodeComponent/PopupAds';
 import { GAME_ANALYTICS } from '../../../GameAnalytics/GameAnalytics';
+import CrazySDK from '../../../CrazySDK/CrazySDK';
 
 const { ccclass, property } = _decorator;
 
@@ -106,6 +107,7 @@ export class LayoutGame extends Component {
     }
 
     onShow(boardInfo: BoardInfo) {
+        CrazySDK.game.gameplayStart();
         this.boardInfo = boardInfo;
         const boardConfig: BoardConfig = DataConfig.getBoardConfig(boardInfo);
         this.updateLayoutBoard(boardConfig.data.length);
@@ -272,6 +274,7 @@ export class LayoutGame extends Component {
 
     checkWin() {
         if (this.dataBoard.isWin()) {
+            CrazySDK.game.gameplayStop();
             if (!this.nodePopupWin) {
                 this.nodePopupWin = instantiate(this.popupWin);
                 this.node.addChild(this.nodePopupWin);
@@ -280,7 +283,6 @@ export class LayoutGame extends Component {
             this.scriptTime.stop();
             LocalStorage.cacheBoardFinished(this.boardInfo, this.scriptTime.getTime());
             this.clearDataAndUI();
-
         }
     }
 
@@ -327,6 +329,7 @@ export class LayoutGame extends Component {
     }
 
     onClickBack() {
+        CrazySDK.game.gameplayStop();
         this.transition.runOut(() => {
             director.emit(EVENT_TYPE.SWITCH_LAYOUT, { layout: GAME_LAYOUT.LOBBY, data: null });
             this.clearDataAndUI();
