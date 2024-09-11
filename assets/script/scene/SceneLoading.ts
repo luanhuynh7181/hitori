@@ -1,4 +1,4 @@
-import { _decorator, assetManager, Component, director, JsonAsset, Node, resources } from 'cc';
+import { _decorator, assetManager, Component, director, JsonAsset, Node, ResolutionPolicy, resources, view } from 'cc';
 import BoardConfig from '../board/BoardConfig';
 import PackConfig from '../board/PackConfig';
 import DataConfig from '../board/DataConfig';
@@ -6,12 +6,29 @@ import { PACK_TYPE } from '../Enum';
 import { LocalStorage } from '../Storage';
 import CrazySDK from '../../CrazySDK/CrazySDK';
 import { GAME_ANALYTICS } from '../../GameAnalytics/GameAnalytics';
+import { isModeDev } from '../Constant';
 const { ccclass, property } = _decorator;
 
 @ccclass('SceneLoading')
 export class SceneLoading extends Component {
 
     @property(Node) nodeLoading: Node;
+    @property(Node) nodeBg: Node;
+
+    onLoad() {
+        view.setResolutionPolicy(ResolutionPolicy.FIXED_HEIGHT);
+        this.onResize();
+        window.addEventListener('resize', this.onResize);
+    }
+
+    onResize() {
+        const designSize = view.getDesignResolutionSize();
+        const viewSize = view.getVisibleSize();
+        let scale = viewSize.width / designSize.width;
+        this.nodeBg.setScale(scale, scale);
+        if (isModeDev) return;
+        view.setCanvasSize(window.innerWidth, window.innerHeight);
+    }
 
     async start() {
         LocalStorage.loadData();
@@ -108,6 +125,12 @@ export class SceneLoading extends Component {
             }
         }
     }
+
+    onDestroy() {
+        console.log("onDestroy---------------");
+        window.removeEventListener('resize', this.onResize);
+    }
+
 }
 
 

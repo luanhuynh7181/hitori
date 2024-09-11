@@ -45,8 +45,8 @@
     },
     "_lscale": {
       "__type__": "cc.Vec3",
-      "x": 1,
-      "y": 1,
+      "x": 0.7,
+      "y": 0.7,
       "z": 1
     },
     "_mobility": 0,
@@ -73,8 +73,8 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 296.33203125,
-      "height": 157.2
+      "width": 423.72314453125,
+      "height": 225.46
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
@@ -112,10 +112,10 @@
     "_string": "Hitori",
     "_horizontalAlign": 1,
     "_verticalAlign": 1,
-    "_actualFontSize": 120,
-    "_fontSize": 120,
+    "_actualFontSize": 171,
+    "_fontSize": 171,
     "_fontFamily": "Arial",
-    "_lineHeight": 120,
+    "_lineHeight": 171,
     "_overflow": 0,
     "_enableWrapText": true,
     "_font": {
@@ -137,7 +137,7 @@
       "b": 255,
       "a": 255
     },
-    "_outlineWidth": 3,
+    "_outlineWidth": 5,
     "_enableShadow": false,
     "_shadowColor": {
       "__type__": "cc.Color",

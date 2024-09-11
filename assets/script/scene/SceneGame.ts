@@ -1,9 +1,9 @@
-import { _decorator, Color, Component, director, Node, Sprite, tween, Tween, UIOpacity, view } from 'cc';
+import { _decorator, Color, Component, director, Node, ResolutionPolicy, Sprite, tween, Tween, UIOpacity, view } from 'cc';
 import { LayoutBoard } from './layout_scene_game/LayoutBoard';
 import { LayoutLobby } from './layout_scene_game/LayoutLobby';
 import { LayoutGame } from './layout_scene_game/LayoutGame';
 import { EVENT_TYPE, GAME_LAYOUT } from '../Enum';
-import { DESIGN_SIZE } from '../Constant';
+import { DESIGN_SIZE, isModeDev } from '../Constant';
 const { ccclass, property } = _decorator;
 
 @ccclass('SceneGame')
@@ -14,23 +14,30 @@ export class SceneGame extends Component {
     @property(LayoutBoard) layoutBoard: LayoutBoard;
 
     @property(Node) background: Node;
-    @property(Node) background2: Node;
+
+    onLoad() {
+        view.setResolutionPolicy(ResolutionPolicy.FIXED_HEIGHT);
+        window.addEventListener('resize', this.onResize.bind(this));
+    }
 
     start() {
         director.on(EVENT_TYPE.SWITCH_LAYOUT, this.setVisibleLayout, this);
-
-        window.addEventListener('resize', this.onResize.bind(this));
-
         this.onResize();
         this.setVisibleLayout({ layout: GAME_LAYOUT.LOBBY });
     }
 
     onResize() {
-        const viewSize = view.getVisibleSize();
+        if (!isModeDev) {
+            view.setCanvasSize(window.innerWidth, window.innerHeight);
+        }
         const designSize = view.getDesignResolutionSize();
+        const viewSize = view.getVisibleSize();
+        let scale = viewSize.width / designSize.width;
+        this.background.setScale(scale, scale);
         this.layoutLobby.onResize(designSize, viewSize);
         this.layoutGame.onResize(designSize, viewSize);
         this.layoutBoard.onResize(designSize, viewSize);
+
     }
 
     setVisibleLayout(data: { layout: GAME_LAYOUT, data?: any }) {

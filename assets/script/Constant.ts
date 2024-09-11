@@ -12,9 +12,4 @@ export const DESIGN_SIZE = {
     HEIGHT: 615
 }
 
-export const BUID_PLATFORM = {
-    NONE: 0,
-    CRAZY: 1
-}
-
-export const PLATFORM = BUID_PLATFORM.CRAZY;
+export const isModeDev = true;

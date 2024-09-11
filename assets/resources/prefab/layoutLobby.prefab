@@ -99,7 +99,7 @@
     "_lpos": {
       "__type__": "cc.Vec3",
       "x": 0,
-      "y": -280,
+      "y": -287.56,
       "z": 0
     },
     "_lrot": {
@@ -111,8 +111,8 @@
     },
     "_lscale": {
       "__type__": "cc.Vec3",
-      "x": 1,
-      "y": 1,
+      "x": 0.6,
+      "y": 0.6,
       "z": 1
     },
     "_mobility": 0,
@@ -139,8 +139,8 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 107.32421875,
-      "height": 25.2
+      "width": 160.986328125,
+      "height": 37.8
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
@@ -178,10 +178,10 @@
     "_string": "Version 1.0",
     "_horizontalAlign": 1,
     "_verticalAlign": 1,
-    "_actualFontSize": 20,
-    "_fontSize": 20,
+    "_actualFontSize": 30,
+    "_fontSize": 30,
     "_fontFamily": "Arial",
-    "_lineHeight": 20,
+    "_lineHeight": 30,
     "_overflow": 0,
     "_enableWrapText": true,
     "_font": {
@@ -243,7 +243,7 @@
     "_left": 0,
     "_right": 0,
     "_top": 24.8,
-    "_bottom": 14.900000000000006,
+    "_bottom": 8.600000000000009,
     "_horizontalCenter": 0,
     "_verticalCenter": 0,
     "_isAbsLeft": true,
@@ -1048,8 +1048,8 @@
     },
     "_lscale": {
       "__type__": "cc.Vec3",
-      "x": 1,
-      "y": 1,
+      "x": 0.6,
+      "y": 0.6,
       "z": 1
     },
     "_mobility": 0,
@@ -1076,8 +1076,8 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 220.6787109375,
-      "height": 63
+      "width": 353.0859375,
+      "height": 100.8
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
@@ -1115,10 +1115,10 @@
     "_string": "Play now",
     "_horizontalAlign": 1,
     "_verticalAlign": 1,
-    "_actualFontSize": 50,
-    "_fontSize": 50,
+    "_actualFontSize": 80,
+    "_fontSize": 80,
     "_fontFamily": "Arial",
-    "_lineHeight": 50,
+    "_lineHeight": 80,
     "_overflow": 0,
     "_enableWrapText": true,
     "_font": {
@@ -1210,8 +1210,8 @@
     },
     "_lscale": {
       "__type__": "cc.Vec3",
-      "x": 1,
-      "y": 1,
+      "x": 0.6,
+      "y": 0.6,
       "z": 1
     },
     "_mobility": 0,
@@ -1238,8 +1238,8 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 65.09765625,
-      "height": 50.4
+      "width": 107.4111328125,
+      "height": 83.16
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
@@ -1277,10 +1277,10 @@
     "_string": "5x5",
     "_horizontalAlign": 1,
     "_verticalAlign": 1,
-    "_actualFontSize": 40,
-    "_fontSize": 40,
+    "_actualFontSize": 66,
+    "_fontSize": 66,
     "_fontFamily": "Arial",
-    "_lineHeight": 40,
+    "_lineHeight": 66,
     "_overflow": 0,
     "_enableWrapText": true,
     "_font": {
@@ -2442,8 +2442,8 @@
     },
     "_lscale": {
       "__type__": "cc.Vec3",
-      "x": 1,
-      "y": 1,
+      "x": 0.6,
+      "y": 0.6,
       "z": 1
     },
     "_mobility": 0,
@@ -2470,8 +2470,8 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 315.63720703125,
-      "height": 56.7
+      "width": 490.9912109375,
+      "height": 88.2
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
@@ -2509,10 +2509,10 @@
     "_string": "Choose board",
     "_horizontalAlign": 1,
     "_verticalAlign": 1,
-    "_actualFontSize": 45,
-    "_fontSize": 45,
+    "_actualFontSize": 70,
+    "_fontSize": 70,
     "_fontFamily": "Arial",
-    "_lineHeight": 45,
+    "_lineHeight": 70,
     "_overflow": 0,
     "_enableWrapText": true,
     "_font": {
@@ -2604,8 +2604,8 @@
     },
     "_lscale": {
       "__type__": "cc.Vec3",
-      "x": 1,
-      "y": 1,
+      "x": 0.6,
+      "y": 0.6,
       "z": 1
     },
     "_mobility": 0,
@@ -2632,8 +2632,8 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 87.01171875,
-      "height": 50.4
+      "width": 143.5693359375,
+      "height": 83.16
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
@@ -2671,10 +2671,10 @@
     "_string": "0/10",
     "_horizontalAlign": 0,
     "_verticalAlign": 1,
-    "_actualFontSize": 40,
-    "_fontSize": 40,
+    "_actualFontSize": 66,
+    "_fontSize": 66,
     "_fontFamily": "Arial",
-    "_lineHeight": 40,
+    "_lineHeight": 66,
     "_overflow": 0,
     "_enableWrapText": true,
     "_font": {
